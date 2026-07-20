@@ -5,27 +5,36 @@ weight: 1
 chapter: false
 pre: " <b> 3.2. </b> "
 ---
-{{% notice warning %}}
-⚠️ **Lưu ý:** Các thông tin dưới đây chỉ nhằm mục đích tham khảo, vui lòng **không sao chép nguyên văn** cho bài báo cáo của bạn kể cả warning này.
-{{% /notice %}}
+📝 Bài 2: Chia sẻ một kinh nghiệm nhỏ khi xây dựng website xem phim trên AWS
 
-# SESSION POLICIES TRONG AMAZON EKS POD IDENTITY
+Xin chào mọi người,
 
-Amazon EKS Pod Identity vừa bổ sung tính năng session policies, cho phép bạn thu hẹp quyền IAM một cách linh hoạt và chính xác cho từng pod mà không cần tạo thêm nhiều IAM roles riêng biệt. Đây là bước tiến quan trọng giúp áp dụng nguyên tắc least privilege hiệu quả hơn trong môi trường Kubernetes quy mô lớn.
+Trong quá trình phát triển dự án **Netflop**, nhóm mình từng đặt câu hỏi:
 
-Các điểm chính cần nắm:
+**Tại sao không phát video trực tiếp từ Amazon S3 mà lại phải dùng thêm Amazon CloudFront?**
 
-* Session policy là một IAM policy inline được chỉ định khi tạo hoặc cập nhật Pod Identity association.
-* Quyền hiệu quả = intersection (giao) giữa permissions của IAM role và session policy → session policy chỉ có thể thu hẹp, không thể mở rộng quyền.
-* Giúp tránh tình trạng over-permissioning khi reuse chung một IAM role cho nhiều workloads có nhu cầu khác nhau.
-* Hỗ trợ cả same-account và cross-account (qua IAM role chaining).
-* Giảm đáng kể số lượng IAM roles cần quản lý, tránh chạm giới hạn quota IAM trong cluster lớn.
-* Cấu hình dễ dàng qua AWS Management Console, AWS CLI hoặc AWS SDK khi tạo association giữa Kubernetes ServiceAccount và IAM role.
+Sau khi tìm hiểu và triển khai thực tế, nhóm nhận thấy CloudFront mang lại rất nhiều lợi ích.
 
-Tính năng này đặc biệt hữu ích khi bạn có nhiều ứng dụng chạy trên cùng một IAM role nhưng cần giới hạn quyền khác nhau (ví dụ: một pod chỉ đọc S3 bucket cụ thể, pod khác chỉ gọi một số API nhất định).
+Thay vì người dùng truy cập trực tiếp vào S3, toàn bộ video **HLS** được phân phối thông qua **Amazon CloudFront**.
 
-...Hình ảnh...
+Một số lợi ích mà nhóm nhận thấy:
 
-...Link...
+✅ Giảm độ trễ khi xem video.
 
-...Hướng dẫn...
+✅ Tăng tốc độ tải nhờ cơ chế Cache tại Edge Locations.
+
+✅ Giảm số lượng request trực tiếp đến S3.
+
+✅ Hỗ trợ HTTPS mặc định.
+
+✅ Có thể bảo vệ nội dung bằng **CloudFront Signed Cookies**, chỉ người dùng đã được xác thực mới xem được video.
+
+Đối với các website có nhiều nội dung media như xem phim hoặc học trực tuyến, CloudFront thực sự là một dịch vụ rất đáng để tìm hiểu.
+
+👉 Không biết mọi người thường sử dụng **CloudFront**, **S3 trực tiếp** hay CDN khác khi xây dựng hệ thống streaming? Rất mong được học hỏi thêm từ mọi người.
+
+📚 Link tham khảo
+[https://aws.amazon.com/cloudfront/](https://aws.amazon.com/cloudfront/)
+[https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/Introduction.html](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/Introduction.html)
+[https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/PrivateContent.html](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/PrivateContent.html?utm_source=chatgpt.com)
+[https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/private-content-signed-cookies.html](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/private-content-signed-cookies.html?utm_source=chatgpt.com)

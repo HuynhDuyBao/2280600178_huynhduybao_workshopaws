@@ -1,126 +1,64 @@
 ---
-title: "Event 2"
-date: 2024-01-01
-weight: 1
-chapter: false
-pre: " <b> 4.2. </b> "
+title : "Event 2: FLOCI Workshop - AI Workflow & Agent Platform"
+date : 2026-05-30
+weight : 2
+chapter : false
+pre : " <b> 4.2. </b> "
 ---
 
-{{% notice warning %}}
-⚠️ **Note:** The information below is for reference purposes only. Please **do not copy it verbatim** into your report, including this warning.
-{{% /notice %}}
+### Purpose of the Event
 
-# Summary Report: “GenAI-powered App-DB Modernization workshop”
+- Introduce the FLOCI platform and the growing trend of AI Agents in software development.
+- Share practical approaches to building AI-powered workflows that boost project development efficiency.
+- Help participants better understand how AI can be integrated into DevOps and Cloud processes.
+- Create a space to connect with a community of people passionate about AI, Cloud Computing, and Software Engineering.
 
-### Event Objectives
+### Content Shared
 
-- Share best practices in modern application design
-- Introduce Domain-Driven Design (DDD) and event-driven architecture
-- Provide guidance on selecting the right compute services
-- Present AI tools to support the development lifecycle
+#### Introduction to FLOCI
 
-### Speakers
+- FLOCI is an open-source platform designed for building and managing AI Workflows.
+- It allows multiple AI Agents to work together within a single processing pipeline.
+- The platform focuses on flexible, easily scalable AI application development.
 
-- **Jignesh Shah** – Director, Open Source Databases
-- **Erica Liu** – Sr. GTM Specialist, AppMod
-- **Fabrianne Effendi** – Assc. Specialist SA, Serverless Amazon Web Services
+#### AI Workflow
 
-### Key Highlights
+- Explained how to break down a large problem into smaller, more manageable processing steps.
+- Each AI Agent handles a specific task - such as analyzing requirements, generating code, or verifying results.
+- This approach helps shorten development time while increasing the level of automation across the workflow.
 
-#### Identifying the drawbacks of legacy application architecture
+#### Applications in Software Development
 
-- Long product release cycles → Lost revenue/missed opportunities  
-- Inefficient operations → Reduced productivity, higher costs  
-- Non-compliance with security regulations → Security breaches, loss of reputation  
-
-#### Transitioning to modern application architecture – Microservices
-
-Migrating to a modular system — each function is an **independent service** communicating via **events**, built on three core pillars:
-
-- **Queue Management**: Handle asynchronous tasks  
-- **Caching Strategy**: Optimize performance  
-- **Message Handling**: Flexible inter-service communication  
-
-#### Domain-Driven Design (DDD)
-
-- **Four-step method**: Identify domain events → arrange timeline → identify actors → define bounded contexts  
-- **Bookstore case study**: Demonstrates real-world DDD application  
-- **Context mapping**: 7 patterns for integrating bounded contexts  
-
-#### Event-Driven Architecture
-
-- **3 integration patterns**: Publish/Subscribe, Point-to-point, Streaming  
-- **Benefits**: Loose coupling, scalability, resilience  
-- **Sync vs async comparison**: Understanding the trade-offs  
-
-#### Compute Evolution
-
-- **Shared Responsibility Model**: EC2 → ECS → Fargate → Lambda  
-- **Serverless benefits**: No server management, auto-scaling, pay-for-value  
-- **Functions vs Containers**: Criteria for appropriate choice  
-
-#### Amazon Q Developer
-
-- **SDLC automation**: From planning to maintenance  
-- **Code transformation**: Java upgrade, .NET modernization  
-- **AWS Transform agents**: VMware, Mainframe, .NET migration  
+- AI can assist with everything from project planning and documentation to actual coding support.
+- Organizing work into a Workflow makes each processing step clearer and easier to manage, compared to relying on a single AI for everything.
+- The session also emphasized that developers still play an irreplaceable role in reviewing and validating AI-generated output.
 
 ### Key Takeaways
 
-#### Design Mindset
+#### Knowledge
 
-- **Business-first approach**: Always start from the business domain, not the technology  
-- **Ubiquitous language**: Importance of a shared vocabulary between business and tech teams  
-- **Bounded contexts**: Identifying and managing complexity in large systems  
+- Gained a clearer understanding of what AI Workflow and AI Agents actually mean.
+- Learned more about the FLOCI platform and how it coordinates multiple AI Agents within one system.
+- Became more aware of current trends in applying AI to software development.
 
-#### Technical Architecture
+#### Skills
 
-- **Event storming technique**: Practical method for modeling business processes  
-- Use **event-driven communication** instead of synchronous calls  
-- **Integration patterns**: When to use sync, async, pub/sub, streaming  
-- **Compute spectrum**: Criteria for choosing between VM, containers, and serverless  
+- Learned how to break a problem down into smaller parts before applying AI to solve it.
+- Strengthened my ability to think in terms of workflow design, rather than just focusing on writing code.
+- Gained a clearer direction on how to apply AI to Cloud-based projects going forward.
 
-#### Modernization Strategy
+### Application to My Internship Project
 
-- **Phased approach**: No rushing — follow a clear roadmap  
-- **7Rs framework**: Multiple modernization paths depending on the application  
-- **ROI measurement**: Cost reduction + business agility  
+- Applied the mindset of breaking down processes into smaller steps while building the **Cloud-Native AI Document Extractor & Analytics** project.
+- Designed the processing flow stage by stage: Upload file → Amazon S3 → AWS Lambda → Amazon Textract → Amazon Bedrock → Database → Frontend.
+- Gained a better understanding of the specific role each AWS service plays throughout the entire data processing pipeline.
 
-### Applying to Work
+### My Experience at the Event
 
-- **Apply DDD** to current projects: Event storming sessions with business teams  
-- **Refactor microservices**: Use bounded contexts to define service boundaries  
-- **Implement event-driven patterns**: Replace some sync calls with async messaging  
-- **Adopt serverless**: Pilot AWS Lambda for suitable use cases  
-- **Try Amazon Q Developer**: Integrate into the dev workflow to boost productivity  
+Attending this workshop gave me exposure to a fairly new approach to AI development through the AI Workflow model. Even though my time there was limited, the session on FLOCI helped me better understand how to coordinate multiple AI Agents to solve a complex problem together, rather than having AI handle isolated tasks one at a time.
 
-### Event Experience
+Beyond the technical knowledge, I also had the chance to chat with other members of the community about current trends in applying AI within Cloud Computing and Software Engineering.
 
-Attending the **“GenAI-powered App-DB Modernization”** workshop was extremely valuable, giving me a comprehensive view of modernizing applications and databases using advanced methods and tools. Key experiences included:
+### Summary
 
-#### Learning from highly skilled speakers
-- Experts from AWS and major tech organizations shared **best practices** in modern application design.  
-- Through real-world case studies, I gained a deeper understanding of applying **DDD** and **Event-Driven Architecture** to large projects.  
-
-#### Hands-on technical exposure
-- Participating in **event storming** sessions helped me visualize how to **model business processes** into domain events.  
-- Learned how to **split microservices** and define **bounded contexts** to manage large-system complexity.  
-- Understood trade-offs between **synchronous and asynchronous communication** and integration patterns like **pub/sub, point-to-point, streaming**.  
-
-#### Leveraging modern tools
-- Explored **Amazon Q Developer**, an AI tool for SDLC support from planning to maintenance.  
-- Learned to **automate code transformation** and pilot serverless with **AWS Lambda** to improve productivity.  
-
-#### Networking and discussions
-- The workshop offered opportunities to exchange ideas with experts, peers, and business teams, enhancing the **ubiquitous language** between business and tech.  
-- Real-world examples reinforced the importance of the **business-first approach** rather than focusing solely on technology.  
-
-#### Lessons learned
-- Applying DDD and event-driven patterns reduces **coupling** while improving **scalability** and **resilience**.  
-- Modernization requires a **phased approach** with **ROI measurement**; rushing the process can be risky.  
-- AI tools like Amazon Q Developer can significantly **boost productivity** when integrated into the current workflow.  
-
-#### Some event photos
-*Add your event photos here*  
-
-> Overall, the event not only provided technical knowledge but also helped me reshape my thinking about application design, system modernization, and cross-team collaboration.
+After the workshop, I came away with a much clearer picture of AI Workflow, AI Agents, and how to design a smart working process. This knowledge gave me useful ideas for architecting my internship project, and also helped shape my direction for future research into AI on the AWS platform.

@@ -6,17 +6,20 @@ chapter: false
 pre: " <b> 3. </b> "
 ---
 
-{{% notice warning %}}  
+{{% notice warning %}}
 ⚠️ **Lưu ý:** Các thông tin dưới đây chỉ nhằm mục đích tham khảo, vui lòng **không sao chép nguyên văn** cho bài báo cáo của bạn kể cả warning này.
 {{% /notice %}}
 
-Tại đây sẽ là phần liệt kê, giới thiệu các blogs mà các bạn đã đăng trên [AWS Study Group](https://www.facebook.com/groups/awsstudygroupfcj). Ví dụ:
+Tại đây là phần liệt kê và giới thiệu các blog nhóm đã đăng trong quá trình thực hiện dự án **Netflop - Website xem phim trên nền tảng AWS**.
 
-###  [Blog 1 - SESSION POLICIES TRONG AMAZON EKS POD IDENTITY](3.1-Blog1/)
-Blog này giới thiệu Amazon EKS Pod Identity vừa bổ sung tính năng session policies, cho phép bạn thu hẹp quyền IAM một cách linh hoạt và chính xác cho từng pod mà không cần tạo thêm nhiều IAM roles riêng biệt. Đây là bước tiến quan trọng giúp áp dụng nguyên tắc least privilege hiệu quả hơn trong môi trường Kubernetes quy mô lớn.
+### [Blog 1 - Tại sao nhóm mình chọn AWS Elemental MediaConvert thay vì FFmpeg?](3.1-Blog1/)
 
-###  [Blog 2 - ...](3.2-Blog2/)
-Blog này giới thiệu Amazon EKS Pod Identity vừa bổ sung tính năng session policies, cho phép bạn thu hẹp quyền IAM một cách linh hoạt và chính xác cho từng pod mà không cần tạo thêm nhiều IAM roles riêng biệt. Đây là bước tiến quan trọng giúp áp dụng nguyên tắc least privilege hiệu quả hơn trong môi trường Kubernetes quy mô lớn.
+Blog này chia sẻ lý do nhóm lựa chọn **AWS Elemental MediaConvert** thay vì tự chạy **FFmpeg trên Amazon EC2** để encode video. Nội dung tập trung vào các lợi ích như giảm tải cho EC2, tự động chuyển đổi video sang HLS nhiều chất lượng và giúp media pipeline dễ mở rộng hơn.
 
-###  [Blog 3 - ...](3.3-Blog3/)
-Blog này giới thiệu Amazon EKS Pod Identity vừa bổ sung tính năng session policies, cho phép bạn thu hẹp quyền IAM một cách linh hoạt và chính xác cho từng pod mà không cần tạo thêm nhiều IAM roles riêng biệt. Đây là bước tiến quan trọng giúp áp dụng nguyên tắc least privilege hiệu quả hơn trong môi trường Kubernetes quy mô lớn.
+### [Blog 2 - Tại sao nhóm mình dùng Amazon CloudFront thay vì phát video trực tiếp từ S3?](3.2-Blog2/)
+
+Blog này chia sẻ kinh nghiệm sử dụng **Amazon CloudFront** để phân phối video HLS trong website xem phim. Nhóm trình bày các lợi ích như giảm độ trễ, cache tại Edge Locations, giảm request trực tiếp đến S3, hỗ trợ HTTPS và bảo vệ nội dung bằng CloudFront Signed Cookies.
+
+### [Blog 3 - Xây dựng Media Pipeline theo hướng Event-Driven trên AWS](3.3-Blog3/)
+
+Blog này trình bày cách nhóm sử dụng mô hình **Event-Driven Architecture** với luồng **MediaConvert → EventBridge → Lambda → Backend Webhook** để tự động cập nhật trạng thái tập phim sau khi encode hoàn tất, thay vì để Backend polling liên tục.

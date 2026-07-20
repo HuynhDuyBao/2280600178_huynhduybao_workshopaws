@@ -1,115 +1,177 @@
 ---
 title: "Proposal"
-date: 2024-01-01
+date: 2026-04-20
 weight: 2
 chapter: false
 pre: " <b> 2. </b> "
 ---
-{{% notice warning %}}
-⚠️ **Note:** The information below is for reference purposes only. Please **do not copy verbatim** for your report, including this warning.
-{{% /notice %}}
 
-In this section, you need to summarize the contents of the workshop that you **plan** to conduct.
-
-# IoT Weather Platform for Lab Research
-## A Unified AWS Serverless Solution for Real-Time Weather Monitoring
+# Netflop Movie Website on AWS
+## A movie streaming architecture using EC2, RDS, S3, MediaConvert, CloudFront, and Lambda
 
 ### 1. Executive Summary
-The IoT Weather Platform is designed for the ITea Lab team in Ho Chi Minh City to enhance weather data collection and analysis. It supports up to 5 weather stations, with potential scalability to 10-15, utilizing Raspberry Pi edge devices with ESP32 sensors to transmit data via MQTT. The platform leverages AWS Serverless services to deliver real-time monitoring, predictive analytics, and cost efficiency, with access restricted to 5 lab members via Amazon Cognito.
+
+**Netflop** is a movie streaming website deployed on AWS. The system allows users to browse movies, search for movies, view movie details, stream HLS videos, and view subtitles. Administrators can upload movies, upload subtitles, manage episodes, posters, avatars, and movie metadata.
+
+The current architecture uses **Cloudflare** for the `netflop.win` domain, **Amazon EC2** for Nginx, React frontend, and Node.js API, **Amazon RDS MySQL** for the main database, **Amazon S3** for video/images/subtitles, **AWS Elemental MediaConvert** to convert MP4/MKV videos to HLS, **Amazon CloudFront** to distribute video streams, **Lambda** and **EventBridge** to automate video/subtitle status updates, and **CloudWatch** with **SNS** for monitoring and alerts.
+
+The goal is to build a realistic movie website architecture and learn how to deploy a web application, process media, deliver content, and monitor systems on AWS.
 
 ### 2. Problem Statement
-### What’s the Problem?
-Current weather stations require manual data collection, becoming unmanageable with multiple units. There is no centralized system for real-time data or analytics, and third-party platforms are costly and overly complex.
 
-### The Solution
-The platform uses AWS IoT Core to ingest MQTT data, AWS Lambda and API Gateway for processing, Amazon S3 for storage (including a data lake), and AWS Glue Crawlers and ETL jobs to extract, transform, and load data from the S3 data lake to another S3 bucket for analysis. AWS Amplify with Next.js provides the web interface, and Amazon Cognito ensures secure access. Similar to Thingsboard and CoreIoT, users can register new devices and manage connections, though this platform operates on a smaller scale and is designed for private use. Key features include real-time dashboards, trend analysis, and low operational costs.
+A movie website needs to manage not only movie data but also uploaded videos, HLS outputs, posters, avatars, and subtitles. If everything is stored directly on one EC2 server, the system may face storage, scalability, automation, and monitoring issues.
 
-### Benefits and Return on Investment
-The solution establishes a foundational resource for lab members to develop a larger IoT platform, serving as a study resource, and provides a data foundation for AI enthusiasts for model training or analysis. It reduces manual reporting for each station via a centralized platform, simplifying management and maintenance, and improves data reliability. Monthly costs are $0.66 USD per the AWS Pricing Calculator, with a 12-month total of $7.92 USD. All IoT equipment costs are covered by the existing weather station setup, eliminating additional development expenses. The break-even period of 6-12 months is achieved through significant time savings from reduced manual work.
+The proposed solution separates the application, database, media storage, video processing, content delivery, and monitoring layers:
+
+* **EC2/Nginx** runs the React frontend and Node.js backend API.
+* **RDS MySQL** stores the main system data.
+* **S3 input bucket** stores uploaded videos and subtitle inputs.
+* **MediaConvert** converts MP4/MKV videos into multi-quality HLS.
+* **S3 output bucket** stores HLS output, public images, avatars, and VTT subtitles.
+* **CloudFront** delivers HLS streams and protects streams with signed cookies.
+* **EventBridge + Lambda** receives MediaConvert events and calls the backend webhook to update episode status.
+* **Lambda subtitle converter** converts `.srt` subtitles into `.vtt`.
+* **CloudWatch + SNS** provides monitoring and alerting.
 
 ### 3. Solution Architecture
-The platform employs a serverless AWS architecture to manage data from 5 Raspberry Pi-based stations, scalable to 15. Data is ingested via AWS IoT Core, stored in an S3 data lake, and processed by AWS Glue Crawlers and ETL jobs to transform and load it into another S3 bucket for analysis. Lambda and API Gateway handle additional processing, while Amplify with Next.js hosts the dashboard, secured by Cognito. The architecture is detailed below:
 
-![IoT Weather Station Architecture](/images/2-Proposal/edge_architecture.jpeg)
+```text
+User / Admin
+   |
+   v
+Cloudflare DNS + HTTPS
+   |
+   v
+netflop.win
+   |
+   v
+EC2 netflop-web
+   |-- Nginx reverse proxy
+   |-- React frontend
+   |-- Node.js backend API
+   |
+   |---- RDS MySQL netflop-db
+   |
+   |---- S3 netflop-input-source
+   |          |
+   |          v
+   |      MediaConvert
+   |          |
+   |          v
+   |---- S3 netflop-output-source
+              |
+              v
+        CloudFront protected HLS
+              |
+              v
+        Video Player
+```
 
-![IoT Weather Platform Architecture](/images/2-Proposal/platform_architecture.jpeg)
+Automation flow:
 
-### AWS Services Used
-- **AWS IoT Core**: Ingests MQTT data from 5 stations, scalable to 15.
-- **AWS Lambda**: Processes data and triggers Glue jobs (two functions).
-- **Amazon API Gateway**: Facilitates web app communication.
-- **Amazon S3**: Stores raw data in a data lake and processed outputs (two buckets).
-- **AWS Glue**: Crawlers catalog data, and ETL jobs transform and load it.
-- **AWS Amplify**: Hosts the Next.js web interface.
-- **Amazon Cognito**: Secures access for lab users.
+```text
+MediaConvert Job State Change
+   |
+   v
+EventBridge
+   |
+   v
+Lambda netflop-mediaconvert-notifier
+   |
+   v
+Backend webhook /api/uploads/mediaconvert/events
+   |
+   v
+Update episode status in RDS
+```
 
-### Component Design
-- **Edge Devices**: Raspberry Pi collects and filters sensor data, sending it to IoT Core.
-- **Data Ingestion**: AWS IoT Core receives MQTT messages from the edge devices.
-- **Data Storage**: Raw data is stored in an S3 data lake; processed data is stored in another S3 bucket.
-- **Data Processing**: AWS Glue Crawlers catalog the data, and ETL jobs transform it for analysis.
-- **Web Interface**: AWS Amplify hosts a Next.js app for real-time dashboards and analytics.
-- **User Management**: Amazon Cognito manages user access, allowing up to 5 active accounts.
+Subtitle flow:
 
-### 4. Technical Implementation
-**Implementation Phases**
-This project has two parts—setting up weather edge stations and building the weather platform—each following 4 phases:
-- Build Theory and Draw Architecture: Research Raspberry Pi setup with ESP32 sensors and design the AWS serverless architecture (1 month pre-internship)
-- Calculate Price and Check Practicality: Use AWS Pricing Calculator to estimate costs and adjust if needed (Month 1).
-- Fix Architecture for Cost or Solution Fit: Tweak the design (e.g., optimize Lambda with Next.js) to stay cost-effective and usable (Month 2).
-- Develop, Test, and Deploy: Code the Raspberry Pi setup, AWS services with CDK/SDK, and Next.js app, then test and release to production (Months 2-3).
+```text
+Admin upload .srt
+   |
+   v
+S3 input subtitle-input/
+   |
+   v
+Lambda netflop-subtitle-converter
+   |
+   v
+S3 output subtitles/*.vtt
+   |
+   v
+Video Player subtitles
+```
 
-**Technical Requirements**
-- Weather Edge Station: Sensors (temperature, humidity, rainfall, wind speed), a microcontroller (ESP32), and a Raspberry Pi as the edge device. Raspberry Pi runs Raspbian, handles Docker for filtering, and sends 1 MB/day per station via MQTT over Wi-Fi.
-- Weather Platform: Practical knowledge of AWS Amplify (hosting Next.js), Lambda (minimal use due to Next.js), AWS Glue (ETL), S3 (two buckets), IoT Core (gateway and rules), and Cognito (5 users). Use AWS CDK/SDK to code interactions (e.g., IoT Core rules to S3). Next.js reduces Lambda workload for the fullstack web app.
+### 4. AWS Services Used
 
-### 5. Timeline & Milestones
-**Project Timeline**
-- Pre-Internship (Month 0): 1 month for planning and old station review.
-- Internship (Months 1-3): 3 months.
-    - Month 1: Study AWS and upgrade hardware.
-    - Month 2: Design and adjust architecture.
-    - Month 3: Implement, test, and launch.
-- Post-Launch: Up to 1 year for research.
+| Service | Role |
+| --- | --- |
+| Amazon EC2 | Hosts Node.js backend, React frontend build, and Nginx reverse proxy |
+| Amazon RDS MySQL | Main database `web_xem_phim_final` |
+| Amazon S3 | Stores video input, HLS output, images, avatars, and subtitles |
+| AWS Elemental MediaConvert | Converts MP4/MKV to HLS 360p/480p/720p/1080p |
+| Amazon CloudFront | Delivers HLS streams and protects them with signed cookies |
+| AWS Lambda | Handles MediaConvert events and converts SRT subtitles to VTT |
+| Amazon EventBridge | Captures MediaConvert COMPLETE/ERROR/CANCELED events |
+| Amazon CloudWatch | Monitors EC2, RDS, and Lambda |
+| Amazon SNS | Alert topic `netflop-alerts` |
+| IAM Role | Grants permissions for EC2, MediaConvert, and Lambda |
+| AWS Systems Manager | Supports EC2 deployment/reload from local AWS CLI |
+| Amazon Cognito | Authentication is configured, but account/region confirmation is needed |
+
+### 5. Timeline and Milestones
+
+| Phase | Time | Main content |
+| --- | --- | --- |
+| Phase 1 | Week 1-2 | Learn AWS fundamentals, IAM, EC2, AWS CLI, and account security |
+| Phase 2 | Week 3-4 | Practice VPC, EC2, S3, and basic app deployment |
+| Phase 3 | Week 5-6 | Learn RDS, CloudWatch, Budgets, and prepare database |
+| Phase 4 | Week 7-8 | Analyze Netflop, design frontend/backend and AWS architecture |
+| Phase 5 | Week 9-10 | Integrate RDS, S3, media upload, and backend APIs |
+| Phase 6 | Week 11-12 | Integrate MediaConvert, CloudFront, Lambda/EventBridge, test, and finish report |
 
 ### 6. Budget Estimation
-You can find the budget estimation on the [AWS Pricing Calculator](https://calculator.aws/#/estimate?id=621f38b12a1ef026842ba2ddfe46ff936ed4ab01).  
-Or you can download the [Budget Estimation File](../attachments/budget_estimation.pdf).
 
-### Infrastructure Costs
-- AWS Services:
-    - AWS Lambda: $0.00/month (1,000 requests, 512 MB storage).
-    - S3 Standard: $0.15/month (6 GB, 2,100 requests, 1 GB scanned).
-    - Data Transfer: $0.02/month (1 GB inbound, 1 GB outbound).
-    - AWS Amplify: $0.35/month (256 MB, 500 ms requests).
-    - Amazon API Gateway: $0.01/month (2,000 requests).
-    - AWS Glue ETL Jobs: $0.02/month (2 DPUs).
-    - AWS Glue Crawlers: $0.07/month (1 crawler).
-    - MQTT (IoT Core): $0.08/month (5 devices, 45,000 messages).
+This estimate is for a small demo deployment, **without Free Tier/credits**, in **Asia Pacific (Singapore) - ap-southeast-1**.
 
-Total: $0.7/month, $8.40/12 months
+| Service | Estimated configuration | Estimated cost/month |
+| --- | --- | --- |
+| Amazon EC2 | 01 t3.micro Linux for Netflop | 10 USD |
+| Amazon EBS | 20 GB gp3 for EC2 | 2 USD |
+| Amazon RDS MySQL | 01 db.t4g.micro Single-AZ | 18 USD |
+| RDS Storage/Backup | 20 GB database and small backup usage | 3 USD |
+| Amazon S3 | 2 input/output buckets, around 20-30 GB media | 2 USD |
+| AWS Elemental MediaConvert | Demo video conversion to multi-quality HLS | 5 USD |
+| Amazon CloudFront | Demo-level HLS streaming | 8 USD |
+| Data Transfer Out | Around 100 GB/month | 12 USD |
+| AWS Lambda | 2 Lambda functions for events/subtitles | 1 USD |
+| EventBridge + SNS | Demo-level events and alerts | 1 USD |
+| Amazon CloudWatch | Basic logs, metrics, and alarms | 3 USD |
+| AWS Systems Manager | Basic EC2 deploy/reload usage | 0 USD |
 
-- Hardware: $265 one-time (Raspberry Pi 5 and sensors).
+**Estimated total:** around **65 USD/month**.  
+**Estimated total for three internship months:** around **195 USD**.
 
 ### 7. Risk Assessment
-#### Risk Matrix
-- Network Outages: Medium impact, medium probability.
-- Sensor Failures: High impact, low probability.
-- Cost Overruns: Medium impact, low probability.
 
-#### Mitigation Strategies
-- Network: Local storage on Raspberry Pi with Docker.
-- Sensors: Regular checks and spares.
-- Cost: AWS budget alerts and optimization.
-
-#### Contingency Plans
-- Revert to manual methods if AWS fails.
-- Use CloudFormation for cost-related rollbacks.
+| Risk | Impact | Probability | Mitigation |
+| --- | --- | --- | --- |
+| Cost increase from video/data transfer | High | Medium | Use small sample videos and monitor Billing/Budgets |
+| RDS public accessible | High | Medium | Improvement direction: restrict Security Group to EC2 only |
+| Wrong S3 public access | High | Low | Use Block Public Access and IAM/CloudFront access control |
+| MediaConvert job failure | Medium | Medium | Monitor job status, EventBridge, and CloudWatch logs |
+| Lambda notifier/webhook failure | Medium | Medium | Check Lambda logs and `/api/uploads/mediaconvert/events` |
+| CloudFront signed cookies misconfiguration | Medium | Medium | Test `/api/stream/session` and stream access |
+| Cognito in another account/region | Low | Medium | Document that Cognito integration needs confirmation |
 
 ### 8. Expected Outcomes
-#### Technical Improvements: 
-Real-time data and analytics replace manual processes.  
-Scalable to 10-15 stations.
-#### Long-term Value
-1-year data foundation for AI research.  
-Reusable for future projects.
+
+* Netflop runs through the `netflop.win` domain.
+* EC2 serves React frontend, Node.js API, and Nginx reverse proxy.
+* RDS MySQL stores movies, episodes, accounts, comments, watch history, and favorites.
+* Admin uploads videos to S3 input and the system creates MediaConvert jobs.
+* Videos are converted to HLS and delivered through CloudFront.
+* EventBridge/Lambda automatically updates episode status after MediaConvert completes.
+* `.srt` subtitles are converted to `.vtt` by Lambda.
+* CloudWatch and SNS monitor and alert EC2, RDS, and Lambda.

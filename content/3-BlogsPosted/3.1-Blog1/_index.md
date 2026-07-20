@@ -9,23 +9,33 @@ pre: " <b> 3.1. </b> "
 ⚠️ **Note:** The information below is for reference purposes only. Please **do not copy verbatim** for your report, including this warning.
 {{% /notice %}}
 
-# SESSION POLICIES IN AMAZON EKS POD IDENTITY
+# Why Our Team Chose AWS Elemental MediaConvert Instead of FFmpeg
 
-Amazon EKS Pod Identity has recently added the session policies feature, allowing you to narrow IAM permissions flexibly and precisely for each pod without needing to create many separate IAM roles. This is an important step forward that helps apply the principle of least privilege more effectively in large-scale Kubernetes environments.
+Hello everyone,
 
-Key points to know:
+While working on **Netflop - a movie streaming website built on AWS**, our team explored and implemented several AWS services to build a complete media pipeline. One of the decisions we spent quite a lot of time considering was how to encode uploaded videos.
 
-* A session policy is an inline IAM policy specified when creating or updating a Pod Identity association.
-* Effective permissions = intersection between the IAM role permissions and the session policy → the session policy can only narrow permissions, not expand them.
-* Helps avoid over-permissioning when reusing a single IAM role for multiple workloads with different needs.
-* Supports both same-account and cross-account (via IAM role chaining).
-* Significantly reduces the number of IAM roles that need to be managed, helping avoid hitting IAM quota limits in large clusters.
-* Easily configured through the AWS Management Console, AWS CLI, or AWS SDK when creating an association between a Kubernetes ServiceAccount and an IAM role.
+At first, we planned to use **FFmpeg running directly on Amazon EC2** to convert videos after upload. However, after testing with multiple large video files, the EC2 instance CPU often stayed at a high usage level, processing took a long time, and managing multiple concurrent encoding tasks became complicated.
 
-This feature is especially useful when you have many applications running on the same IAM role but need different permission restrictions (for example: one pod only reads a specific S3 bucket, another pod only calls certain APIs).
+After further research, our team decided to switch to **AWS Elemental MediaConvert**, combined with **Amazon S3, Amazon CloudFront, Amazon EventBridge, and AWS Lambda** to build an automated video processing workflow.
 
-...Image...
+After implementation, we noticed several clear benefits:
 
-...Link...
+- Automatically converts videos to **HLS** with multiple quality levels such as 360p, 480p, 720p, and 1080p.
+- Significantly reduces the load on EC2 because the encoding process is handled by MediaConvert.
+- Automatically updates movie status after encoding is completed through **EventBridge + Lambda**.
+- Makes the architecture easier to scale as the number of videos or users increases.
 
-...Guide...
+Through this project, our team realized that using AWS **Managed Services** not only reduces operational effort, but also helps the system become more stable and scalable compared with managing everything directly on servers.
+
+This was a very valuable experience for our team during the learning and project implementation process.
+
+Have you ever used **AWS Elemental MediaConvert** or another solution for a video streaming system? We would love to hear your experiences and suggestions so our team can continue improving the project.
+
+Thank you for reading!
+
+## References
+
+- [AWS Elemental MediaConvert](https://aws.amazon.com/mediaconvert/)
+- [What is AWS Elemental MediaConvert?](https://docs.aws.amazon.com/mediaconvert/latest/ug/what-is.html)
+- [Working with jobs in AWS Elemental MediaConvert](https://docs.aws.amazon.com/mediaconvert/latest/ug/working-with-jobs.html)

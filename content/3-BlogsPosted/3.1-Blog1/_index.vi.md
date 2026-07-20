@@ -5,27 +5,35 @@ weight: 1
 chapter: false
 pre: " <b> 3.1. </b> "
 ---
-{{% notice warning %}}
-⚠️ **Lưu ý:** Các thông tin dưới đây chỉ nhằm mục đích tham khảo, vui lòng **không sao chép nguyên văn** cho bài báo cáo của bạn kể cả warning này.
-{{% /notice %}}
+Bài 1: Tại sao nhóm mình chọn AWS Elemental MediaConvert thay vì FFmpeg?
 
-# SESSION POLICIES TRONG AMAZON EKS POD IDENTITY
+Xin chào mọi người,
 
-Amazon EKS Pod Identity vừa bổ sung tính năng session policies, cho phép bạn thu hẹp quyền IAM một cách linh hoạt và chính xác cho từng pod mà không cần tạo thêm nhiều IAM roles riêng biệt. Đây là bước tiến quan trọng giúp áp dụng nguyên tắc least privilege hiệu quả hơn trong môi trường Kubernetes quy mô lớn.
+Trong quá trình thực hiện dự án **Netflop - Website xem phim trên nền tảng AWS**, nhóm mình đã có cơ hội tìm hiểu và triển khai nhiều dịch vụ AWS để xây dựng một media pipeline hoàn chỉnh. Một trong những quyết định khiến nhóm mất khá nhiều thời gian để cân nhắc là lựa chọn giải pháp encode video.
 
-Các điểm chính cần nắm:
+Ban đầu, nhóm dự định sử dụng **FFmpeg chạy trực tiếp trên Amazon EC2** để chuyển đổi video sau khi upload. Tuy nhiên, sau khi thử nghiệm với nhiều video có dung lượng lớn, CPU của EC2 thường xuyên hoạt động ở mức cao, thời gian xử lý kéo dài và việc quản lý nhiều tác vụ encode đồng thời trở nên khá phức tạp.
 
-* Session policy là một IAM policy inline được chỉ định khi tạo hoặc cập nhật Pod Identity association.
-* Quyền hiệu quả = intersection (giao) giữa permissions của IAM role và session policy → session policy chỉ có thể thu hẹp, không thể mở rộng quyền.
-* Giúp tránh tình trạng over-permissioning khi reuse chung một IAM role cho nhiều workloads có nhu cầu khác nhau.
-* Hỗ trợ cả same-account và cross-account (qua IAM role chaining).
-* Giảm đáng kể số lượng IAM roles cần quản lý, tránh chạm giới hạn quota IAM trong cluster lớn.
-* Cấu hình dễ dàng qua AWS Management Console, AWS CLI hoặc AWS SDK khi tạo association giữa Kubernetes ServiceAccount và IAM role.
+Sau khi tìm hiểu thêm, nhóm quyết định chuyển sang sử dụng **AWS Elemental MediaConvert**, kết hợp với **Amazon S3, Amazon CloudFront, Amazon EventBridge và AWS Lambda** để xây dựng quy trình xử lý video tự động.
 
-Tính năng này đặc biệt hữu ích khi bạn có nhiều ứng dụng chạy trên cùng một IAM role nhưng cần giới hạn quyền khác nhau (ví dụ: một pod chỉ đọc S3 bucket cụ thể, pod khác chỉ gọi một số API nhất định).
+Sau một thời gian triển khai, nhóm nhận thấy một số lợi ích rõ rệt:
 
-...Hình ảnh...
+✅ Tự động chuyển đổi video sang chuẩn **HLS** với nhiều chất lượng (360p, 480p, 720p, 1080p).
 
-...Link...
+✅ Giảm tải đáng kể cho EC2 vì toàn bộ quá trình encode được thực hiện bởi MediaConvert.
 
-...Hướng dẫn...
+✅ Tự động cập nhật trạng thái phim sau khi encode hoàn tất thông qua **EventBridge + Lambda**.
+
+✅ Kiến trúc dễ mở rộng khi số lượng video hoặc người dùng tăng lên.
+
+Qua dự án này, nhóm mình nhận ra rằng việc sử dụng các **Managed Services** của AWS không chỉ giúp giảm khối lượng vận hành mà còn giúp hệ thống ổn định và dễ mở rộng hơn so với việc tự triển khai mọi thứ trên máy chủ.
+
+Đây là một trải nghiệm rất thú vị đối với nhóm trong quá trình học tập và thực hiện dự án.
+
+Không biết anh/chị và các bạn trong cộng đồng đã từng sử dụng **AWS Elemental MediaConvert** hoặc giải pháp nào khác cho hệ thống video streaming chưa? Rất mong được lắng nghe những chia sẻ và góp ý để nhóm có thể tiếp tục hoàn thiện dự án.
+
+Xin cảm ơn mọi người đã dành thời gian đọc bài!
+
+📚 Link tham khảo
+[https://aws.amazon.com/mediaconvert/](https://aws.amazon.com/mediaconvert/)
+[https://docs.aws.amazon.com/mediaconvert/latest/ug/what-is.html](https://docs.aws.amazon.com/mediaconvert/latest/ug/what-is.html?utm_source=chatgpt.com)
+[https://docs.aws.amazon.com/mediaconvert/latest/ug/working-with-jobs.html](https://docs.aws.amazon.com/mediaconvert/latest/ug/working-with-jobs.html)

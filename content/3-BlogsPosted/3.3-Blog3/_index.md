@@ -9,23 +9,34 @@ pre: " <b> 3.3. </b> "
 ⚠️ **Note:** The information below is for reference purposes only. Please **do not copy verbatim** for your report, including this warning.
 {{% /notice %}}
 
-# SESSION POLICIES IN AMAZON EKS POD IDENTITY
+# Building an Event-Driven Media Pipeline on AWS
 
-Amazon EKS Pod Identity has recently added the session policies feature, allowing you to narrow IAM permissions flexibly and precisely for each pod without needing to create many separate IAM roles. This is an important step forward that helps apply the principle of least privilege more effectively in large-scale Kubernetes environments.
+Hello everyone,
+In the Netflop project, after the video was processed by AWS Elemental MediaConvert, the team needed to update the movie state so users could watch it immediately.
+Initially, the team considered having the Backend continuously check the Job (Polling) state, but this method was both resource-intensive and inefficient.
+Then, the team switched to an Event-Driven Architecture model with:
+MediaConvert → EventBridge → Lambda → Backend Webhook
+The workflow is as follows:
+📌 MediaConvert completes the Job.
 
-Key points to know:
+📌 EventBridge automatically receives the event.
 
-* A session policy is an inline IAM policy specified when creating or updating a Pod Identity association.
-* Effective permissions = intersection between the IAM role permissions and the session policy → the session policy can only narrow permissions, not expand them.
-* Helps avoid over-permissioning when reusing a single IAM role for multiple workloads with different needs.
-* Supports both same-account and cross-account (via IAM role chaining).
-* Significantly reduces the number of IAM roles that need to be managed, helping avoid hitting IAM quota limits in large clusters.
-* Easily configured through the AWS Management Console, AWS CLI, or AWS SDK when creating an association between a Kubernetes ServiceAccount and an IAM role.
+📌 Lambda is triggered and calls the Webhook back to the Backend.
 
-This feature is especially useful when you have many applications running on the same IAM role but need different permission restrictions (for example: one pod only reads a specific S3 bucket, another pod only calls certain APIs).
+📌 The Backend updates the episode state from Processing to Ready.
 
-...Image...
+As a result:
+✅ No need for continuous Polling.
 
-...Link...
+✅ The Backend is lighter.
 
-...Guide...
+✅ The system responds almost immediately after encoding is complete.
+
+Through this project, our team found EventBridge to be a very useful service for building automated workflows between AWS services.
+
+## References
+
+- [MediaConvert events with EventBridge](https://docs.aws.amazon.com/mediaconvert/latest/ug/eventbridge_events.html)
+- [Amazon EventBridge events for MediaConvert](https://docs.aws.amazon.com/eventbridge/latest/ref/events-ref-mediaconvert.html)
+- [MediaConvert event list](https://docs.aws.amazon.com/mediaconvert/latest/ug/mediaconvert_event_list.html)
+- [AWS Lambda Developer Guide](https://docs.aws.amazon.com/lambda/latest/dg/welcome.html)

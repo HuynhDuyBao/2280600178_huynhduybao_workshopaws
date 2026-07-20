@@ -1,19 +1,37 @@
 ---
-title : "Giới thiệu"
-date : 2024-01-01 
-weight : 1
-chapter : false
-pre : " <b> 5.1. </b> "
+title: "Tổng quan workshop"
+date: 2026-07-10
+weight: 1
+chapter: false
+pre: " <b> 5.1. </b> "
 ---
 
-#### Giới thiệu về VPC Endpoint
+Phần này giới thiệu kiến trúc tổng thể của website xem phim **Netflop** trên AWS và vai trò của từng nhóm dịch vụ. Đây là phần nền để người đọc hiểu cách request đi từ người dùng đến hệ thống, cách admin upload video và cách video được xử lý tự động trước khi phát trên web.
 
-+ Điểm cuối VPC (endpoint) là thiết bị ảo. Chúng là các thành phần VPC có thể mở rộng theo chiều ngang, dự phòng và có tính sẵn sàng cao. Chúng cho phép giao tiếp giữa tài nguyên điện toán của bạn và dịch vụ AWS mà không gây ra rủi ro về tính sẵn sàng.
-+ Tài nguyên điện toán đang chạy trong VPC có thể truy cập Amazon S3 bằng cách sử dụng điểm cuối Gateway. Interface Endpoint  PrivateLink có thể được sử dụng bởi tài nguyên chạy trong VPC hoặc tại TTDL.
+Netflop không chỉ là một website CRUD đơn giản. Hệ thống có pipeline media riêng gồm upload file lớn, lưu file gốc, chuyển mã, lưu HLS output, phát qua CDN, bảo vệ link stream và cập nhật trạng thái tập phim tự động.
 
-#### Tổng quan về workshop
-Trong workshop này, bạn sẽ sử dụng hai VPC.
-+ **"VPC Cloud"** dành cho các tài nguyên cloud như Gateway endpoint và EC2 instance để kiểm tra.
-+ **"VPC On-Prem"** mô phỏng môi trường truyền thống như nhà máy hoặc trung tâm dữ liệu của công ty. Một EC2 Instance chạy phần mềm StrongSwan VPN đã được triển khai trong "VPC On-prem" và được cấu hình tự động để thiết lập đường hầm VPN Site-to-Site với AWS Transit Gateway. VPN này mô phỏng kết nối từ một vị trí tại TTDL (on-prem) với AWS cloud. Để giảm thiểu chi phí, chỉ một phiên bản VPN được cung cấp để hỗ trợ workshop này. Khi lập kế hoạch kết nối VPN cho production workloads của bạn, AWS khuyên bạn nên sử dụng nhiều thiết bị VPN để có tính sẵn sàng cao.
+{{% notice info %}}
+Cần thêm ảnh: sơ đồ kiến trúc tổng quan Netflop trên AWS; nên thể hiện rõ nhóm Application, Database, Media Processing, CDN/Security và Monitoring.
+{{% /notice %}}
 
-![overview](/images/5-Workshop/5.1-Workshop-overview/diagram1.png)
+![](/2280600178_huynhduybao_workshopaws/images/5-Workshop/5.1-Workshop-overview/sodo.jpg)
+
+#### Nội dung
+
+1. [Kiến trúc tổng quan](5.1.1-architecture/)
+2. [Bảng dịch vụ và vai trò](5.1.2-service-map/)
+
+<!-- NETFLOP_DETAIL_START -->
+#### Cách trình bày tổng quan
+
+Ở phần tổng quan, nên trình bày theo hai góc nhìn:
+
+1. Góc nhìn người dùng: mở web, đăng nhập, chọn phim, xem phim, tiếp tục xem.
+2. Góc nhìn admin: thêm phim, upload tập phim, theo dõi tiến trình convert, thêm phụ đề.
+
+Sau đó liên kết từng chức năng với dịch vụ AWS tương ứng. Ví dụ, chức năng upload tập phim không chỉ nằm ở frontend mà còn đi qua backend, S3 input, MediaConvert, S3 output, CloudFront và RDS.
+
+#### Mẫu mô tả ngắn trong báo cáo
+
+Netflop được triển khai theo mô hình ứng dụng web kết hợp media pipeline. EC2 chạy ứng dụng chính, RDS lưu dữ liệu nghiệp vụ, S3 lưu file media, MediaConvert xử lý video, CloudFront phân phối HLS và Lambda xử lý các tác vụ tự động. Cách triển khai này giúp giảm tải cho EC2 vì file video lớn không được lưu lâu dài trên ổ đĩa máy chủ.
+<!-- NETFLOP_DETAIL_END -->

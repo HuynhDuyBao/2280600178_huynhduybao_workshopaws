@@ -5,27 +5,42 @@ weight: 1
 chapter: false
 pre: " <b> 3.3. </b> "
 ---
-{{% notice warning %}}
-⚠️ **Lưu ý:** Các thông tin dưới đây chỉ nhằm mục đích tham khảo, vui lòng **không sao chép nguyên văn** cho bài báo cáo của bạn kể cả warning này.
-{{% /notice %}}
+📝 Bài 3: Chia sẻ một trải nghiệm khi xây dựng Media Pipeline trên AWS
 
-# SESSION POLICIES TRONG AMAZON EKS POD IDENTITY
+Xin chào mọi người,
 
-Amazon EKS Pod Identity vừa bổ sung tính năng session policies, cho phép bạn thu hẹp quyền IAM một cách linh hoạt và chính xác cho từng pod mà không cần tạo thêm nhiều IAM roles riêng biệt. Đây là bước tiến quan trọng giúp áp dụng nguyên tắc least privilege hiệu quả hơn trong môi trường Kubernetes quy mô lớn.
+Trong dự án **Netflop**, sau khi video được **AWS Elemental MediaConvert** xử lý xong, nhóm cần cập nhật trạng thái phim để người dùng có thể xem ngay.
 
-Các điểm chính cần nắm:
+Ban đầu nhóm nghĩ đến việc Backend liên tục kiểm tra trạng thái Job (Polling), nhưng cách này vừa tốn tài nguyên vừa không hiệu quả.
 
-* Session policy là một IAM policy inline được chỉ định khi tạo hoặc cập nhật Pod Identity association.
-* Quyền hiệu quả = intersection (giao) giữa permissions của IAM role và session policy → session policy chỉ có thể thu hẹp, không thể mở rộng quyền.
-* Giúp tránh tình trạng over-permissioning khi reuse chung một IAM role cho nhiều workloads có nhu cầu khác nhau.
-* Hỗ trợ cả same-account và cross-account (qua IAM role chaining).
-* Giảm đáng kể số lượng IAM roles cần quản lý, tránh chạm giới hạn quota IAM trong cluster lớn.
-* Cấu hình dễ dàng qua AWS Management Console, AWS CLI hoặc AWS SDK khi tạo association giữa Kubernetes ServiceAccount và IAM role.
+Sau đó nhóm chuyển sang mô hình **Event-Driven Architecture** với:
 
-Tính năng này đặc biệt hữu ích khi bạn có nhiều ứng dụng chạy trên cùng một IAM role nhưng cần giới hạn quyền khác nhau (ví dụ: một pod chỉ đọc S3 bucket cụ thể, pod khác chỉ gọi một số API nhất định).
+**MediaConvert → EventBridge → Lambda → Backend Webhook**
 
-...Hình ảnh...
+Luồng hoạt động như sau:
 
-...Link...
+📌 MediaConvert hoàn thành Job.
 
-...Hướng dẫn...
+📌 EventBridge tự động nhận sự kiện.
+
+📌 Lambda được kích hoạt và gọi Webhook về Backend.
+
+📌 Backend cập nhật trạng thái tập phim từ **Processing** sang **Ready**.
+
+Nhờ đó:
+
+✅ Không cần Polling liên tục.
+
+✅ Backend nhẹ hơn.
+
+✅ Hệ thống phản hồi gần như ngay khi encode hoàn tất.
+
+Qua dự án này, nhóm mình thấy **EventBridge** là một dịch vụ rất hữu ích để xây dựng các workflow tự động giữa các dịch vụ AWS.
+
+👉 Anh/chị và các bạn thường sử dụng **EventBridge**, **Amazon SQS** hay **AWS Step Functions** trong các hệ thống Event-Driven? Rất mong được trao đổi thêm!
+
+📚 Link tham khảo
+[https://docs.aws.amazon.com/mediaconvert/latest/ug/eventbridge_events.html](https://docs.aws.amazon.com/mediaconvert/latest/ug/eventbridge_events.html?utm_source=chatgpt.com)
+[https://docs.aws.amazon.com/eventbridge/latest/ref/events-ref-mediaconvert.html](https://docs.aws.amazon.com/eventbridge/latest/ref/events-ref-mediaconvert.html?utm_source=chatgpt.com)
+[https://docs.aws.amazon.com/mediaconvert/latest/ug/mediaconvert_event_list.html](https://docs.aws.amazon.com/mediaconvert/latest/ug/mediaconvert_event_list.html?utm_source=chatgpt.com)
+[https://docs.aws.amazon.com/lambda/latest/dg/welcome.html](https://docs.aws.amazon.com/lambda/latest/dg/welcome.html)

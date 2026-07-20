@@ -1,57 +1,31 @@
 ---
-title: "Week 6 Worklog"
-date: 2024-01-01
-weight: 1
+title: "Worklog Week 6"
+date: 2026-05-25
+weight: 6
 chapter: false
 pre: " <b> 1.6. </b> "
 ---
-{{% notice warning %}} 
-⚠️ **Note:** The following information is for reference purposes only. Please **do not copy verbatim** for your own report, including this warning.
-{{% /notice %}}
 
+### Week 6 objectives:
 
-### Week 6 Objectives:
+* Learn system monitoring with Amazon CloudWatch.
+* Strengthen cost management knowledge using AWS Budgets and resource cleanup habits.
+* Summarize AWS foundations before moving to the project implementation phase.
 
-* Connect and get acquainted with members of First Cloud AI Journey.
-* Understand basic AWS services, how to use the console & CLI.
+### Tasks implemented this week:
 
-### Tasks to be carried out this week:
-| Day | Task                                                                                                                                                                                                   | Start Date | Completion Date | Reference Material                        |
-| --- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------- | --------------- | ----------------------------------------- |
-| 2   | - Get acquainted with FCAJ members <br> - Read and take note of internship unit rules and regulations                                                                                                   | 08/11/2025 | 08/11/2025      |
-| 3   | - Learn about AWS and its types of services <br>&emsp; + Compute <br>&emsp; + Storage <br>&emsp; + Networking <br>&emsp; + Database <br>&emsp; + ... <br>                                              | 08/12/2025 | 08/12/2025      | <https://cloudjourney.awsstudygroup.com/> |
-| 4   | - Create AWS Free Tier account <br> - Learn about AWS Console & AWS CLI <br> - **Practice:** <br>&emsp; + Create AWS account <br>&emsp; + Install & configure AWS CLI <br> &emsp; + How to use AWS CLI | 08/13/2025 | 08/13/2025      | <https://cloudjourney.awsstudygroup.com/> |
-| 5   | - Learn basic EC2: <br>&emsp; + Instance types <br>&emsp; + AMI <br>&emsp; + EBS <br>&emsp; + ... <br> - SSH connection methods to EC2 <br> - Learn about Elastic IP   <br>                            | 08/14/2025 | 08/15/2025      | <https://cloudjourney.awsstudygroup.com/> |
-| 6   | - **Practice:** <br>&emsp; + Launch an EC2 instance <br>&emsp; + Connect via SSH <br>&emsp; + Attach an EBS volume                                                                                     | 08/15/2025 | 08/15/2025      | <https://cloudjourney.awsstudygroup.com/> |
+| Day | Task | Start date | Completion date | Reference |
+| --- | --- | --- | --- | --- |
+| Monday | - Learn Amazon CloudWatch <br> - Take notes on metric, log group, alarm, and dashboard | 25/05/2026 | 25/05/2026 | CloudWatch |
+| Tuesday | - Enable metrics for EC2/RDS lab resources <br> - Create a sample alarm when CPU exceeds a threshold <br> - Check basic logs | 26/05/2026 | 26/05/2026 | <https://cloudjourney.awsstudygroup.com/1-explore/> |
+| Wednesday | - Learn AWS Budgets and cost alerts <br> - Check Billing Dashboard <br> - Record resources that may generate cost | 27/05/2026 | 27/05/2026 | AWS Budgets |
+| Thursday | - Learn the concepts of Auto Scaling, Load Balancer, and highly available applications <br> - Relate these concepts to scaling the movie website | 28/05/2026 | 28/05/2026 | EC2 Auto Scaling |
+| Friday | - Summarize the first six weeks of knowledge <br> - List services to be used in the project: EC2, S3, RDS, IAM, VPC, CloudWatch <br> - Clean up lab resources | 29/05/2026 | 29/05/2026 | AWS Console |
 
+### Week 6 outcomes:
 
-### Week 6 Achievements:
-
-* Understood what AWS is and mastered the basic service groups: 
-  * Compute
-  * Storage
-  * Networking 
-  * Database
-  * ...
-
-* Successfully created and configured an AWS Free Tier account.
-
-* Became familiar with the AWS Management Console and learned how to find, access, and use services via the web interface.
-
-* Installed and configured AWS CLI on the computer, including:
-  * Access Key
-  * Secret Key
-  * Default Region
-  * ...
-
-* Used AWS CLI to perform basic operations such as:
-
-  * Check account & configuration information
-  * Retrieve the list of regions
-  * View EC2 service
-  * Create and manage key pairs
-  * Check information about running services
-  * ...
-
-* Acquired the ability to connect between the web interface and CLI to manage AWS resources in parallel.
-* ...
+* Understood the role of CloudWatch in monitoring resources and detecting problems.
+* Created a simple alarm and learned how to read basic metrics.
+* Learned how to track AWS cost and identify resources that should be deleted after practice.
+* Understood the concept of scaling applications with Auto Scaling and Load Balancer.
+* Completed the foundation phase and became ready to analyze and build the movie website project.

@@ -1,59 +1,33 @@
 ---
 title: "Worklog Tuần 11"
-date: 2024-01-01
-weight: 2
+date: 2026-06-29
+weight: 11
 chapter: false
 pre: " <b> 1.11. </b> "
 ---
-{{% notice warning %}}
-⚠️ **Lưu ý:** Các thông tin dưới đây chỉ nhằm mục đích tham khảo, vui lòng **không sao chép nguyên văn** cho bài báo cáo của bạn kể cả warning này.
-{{% /notice %}}
-
 
 ### Mục tiêu tuần 11:
 
-* Kết nối, làm quen với các thành viên trong First Cloud AI Journey.
-* Hiểu dịch vụ AWS cơ bản, cách dùng console & CLI.
+* Kiểm thử toàn bộ hệ thống Netflop sau khi tích hợp AWS.
+* Kiểm thử luồng tự động MediaConvert, EventBridge, Lambda và phụ đề.
+* Bổ sung giám sát, ghi log, cảnh báo và kiểm soát chi phí.
+* Hoàn thiện chức năng chính trước giai đoạn tổng kết.
 
 ### Các công việc cần triển khai trong tuần này:
-| Thứ | Công việc                                                                                                                                                                                   | Ngày bắt đầu | Ngày hoàn thành | Nguồn tài liệu                            |
-| --- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------ | --------------- | ----------------------------------------- |
-| 2   | - Làm quen với các thành viên FCAJ <br> - Đọc và lưu ý các nội quy, quy định tại đơn vị thực tập                                                                                             | 11/08/2025   | 11/08/2025      |
-| 3   | - Tìm hiểu AWS và các loại dịch vụ <br>&emsp; + Compute <br>&emsp; + Storage <br>&emsp; + Networking <br>&emsp; + Database <br>&emsp; + ... <br>                                            | 12/08/2025   | 12/08/2025      | <https://cloudjourney.awsstudygroup.com/> |
-| 4   | - Tạo AWS Free Tier account <br> - Tìm hiểu AWS Console & AWS CLI <br> - **Thực hành:** <br>&emsp; + Tạo AWS account <br>&emsp; + Cài AWS CLI & cấu hình <br> &emsp; + Cách sử dụng AWS CLI | 13/08/2025   | 13/08/2025      | <https://cloudjourney.awsstudygroup.com/> |
-| 5   | - Tìm hiểu EC2 cơ bản: <br>&emsp; + Instance types <br>&emsp; + AMI <br>&emsp; + EBS <br>&emsp; + ... <br> - Các cách remote SSH vào EC2 <br> - Tìm hiểu Elastic IP   <br>                  | 14/08/2025   | 15/08/2025      | <https://cloudjourney.awsstudygroup.com/> |
-| 6   | - **Thực hành:** <br>&emsp; + Tạo EC2 instance <br>&emsp; + Kết nối SSH <br>&emsp; + Gắn EBS volume                                                                                         | 15/08/2025   | 15/08/2025      | <https://cloudjourney.awsstudygroup.com/> |
 
+| Thứ | Công việc | Ngày bắt đầu | Ngày hoàn thành | Nguồn tài liệu |
+| --- | --- | --- | --- | --- |
+| 2 | - Kiểm thử luồng người dùng: xem danh sách phim, tìm kiếm, xem chi tiết, phát HLS stream <br> - Ghi nhận lỗi giao diện và API | 29/06/2026 | 29/06/2026 | Test case dự án |
+| 3 | - Kiểm thử luồng quản trị: upload phim, tạo MediaConvert job, cập nhật poster/phụ đề <br> - Kiểm tra dữ liệu lưu vào RDS và S3 | 30/06/2026 | 30/06/2026 | RDS, S3, MediaConvert |
+| 4 | - Kiểm thử EventBridge gọi Lambda khi MediaConvert COMPLETE/ERROR/CANCELED <br> - Kiểm tra webhook `/api/uploads/mediaconvert/events` | 01/07/2026 | 01/07/2026 | EventBridge, Lambda |
+| 5 | - Kiểm thử upload phụ đề `.srt` và Lambda convert sang `.vtt` <br> - Rà soát Security Group, IAM policy, bucket permission | 02/07/2026 | 02/07/2026 | Lambda, IAM |
+| 6 | - Kiểm tra CloudWatch alarms, SNS topic `netflop-alerts`, Billing Dashboard và AWS Budgets <br> - Tổng hợp lỗi đã sửa và phần còn hạn chế | 03/07/2026 | 03/07/2026 | CloudWatch, SNS |
 
 ### Kết quả đạt được tuần 11:
 
-* Hiểu AWS là gì và nắm được các nhóm dịch vụ cơ bản: 
-  * Compute
-  * Storage
-  * Networking 
-  * Database
-  * ...
-
-* Đã tạo và cấu hình AWS Free Tier account thành công.
-
-* Làm quen với AWS Management Console và biết cách tìm, truy cập, sử dụng dịch vụ từ giao diện web.
-
-* Cài đặt và cấu hình AWS CLI trên máy tính bao gồm:
-  * Access Key
-  * Secret Key
-  * Region mặc định
-  * ...
-
-* Sử dụng AWS CLI để thực hiện các thao tác cơ bản như:
-
-  * Kiểm tra thông tin tài khoản & cấu hình
-  * Lấy danh sách region
-  * Xem dịch vụ EC2
-  * Tạo và quản lý key pair
-  * Kiểm tra thông tin dịch vụ đang chạy
-  * ...
-
-* Có khả năng kết nối giữa giao diện web và CLI để quản lý tài nguyên AWS song song.
-* ...
-
-
+* Hoàn thiện các chức năng chính của website Netflop ở mức demo thực tập.
+* Kiểm thử được luồng người dùng và luồng quản trị.
+* Kiểm thử được pipeline upload video, MediaConvert, CloudFront HLS và cập nhật trạng thái qua Lambda/EventBridge.
+* Biết cách theo dõi log, metric và cảnh báo bằng CloudWatch/SNS.
+* Rà soát được các điểm quan trọng về bảo mật như Security Group, IAM policy, S3 bucket permission và RDS public access.
+* Dọn dẹp tài nguyên không cần thiết và kiểm soát tốt hơn chi phí trong tài khoản AWS.

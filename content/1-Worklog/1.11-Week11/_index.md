@@ -1,57 +1,33 @@
 ---
-title: "Week 11 Worklog"
-date: 2024-01-01
-weight: 2
+title: "Worklog Week 11"
+date: 2026-06-29
+weight: 11
 chapter: false
 pre: " <b> 1.11. </b> "
 ---
-{{% notice warning %}} 
-⚠️ **Note:** The following information is for reference purposes only. Please **do not copy verbatim** for your own report, including this warning.
-{{% /notice %}}
 
+### Week 11 objectives:
 
-### Week 11 Objectives:
+* Test the complete Netflop system after AWS integration.
+* Test the MediaConvert, EventBridge, Lambda, and subtitle automation flows.
+* Add monitoring, logging, alerting, and cost control.
+* Complete the main features before the final summary phase.
 
-* Connect and get acquainted with members of First Cloud AI Journey.
-* Understand basic AWS services, how to use the console & CLI.
+### Tasks implemented this week:
 
-### Tasks to be carried out this week:
-| Day | Task                                                                                                                                                                                                   | Start Date | Completion Date | Reference Material                        |
-| --- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------- | --------------- | ----------------------------------------- |
-| 2   | - Get acquainted with FCAJ members <br> - Read and take note of internship unit rules and regulations                                                                                                   | 08/11/2025 | 08/11/2025      |
-| 3   | - Learn about AWS and its types of services <br>&emsp; + Compute <br>&emsp; + Storage <br>&emsp; + Networking <br>&emsp; + Database <br>&emsp; + ... <br>                                              | 08/12/2025 | 08/12/2025      | <https://cloudjourney.awsstudygroup.com/> |
-| 4   | - Create AWS Free Tier account <br> - Learn about AWS Console & AWS CLI <br> - **Practice:** <br>&emsp; + Create AWS account <br>&emsp; + Install & configure AWS CLI <br> &emsp; + How to use AWS CLI | 08/13/2025 | 08/13/2025      | <https://cloudjourney.awsstudygroup.com/> |
-| 5   | - Learn basic EC2: <br>&emsp; + Instance types <br>&emsp; + AMI <br>&emsp; + EBS <br>&emsp; + ... <br> - SSH connection methods to EC2 <br> - Learn about Elastic IP   <br>                            | 08/14/2025 | 08/15/2025      | <https://cloudjourney.awsstudygroup.com/> |
-| 6   | - **Practice:** <br>&emsp; + Launch an EC2 instance <br>&emsp; + Connect via SSH <br>&emsp; + Attach an EBS volume                                                                                     | 08/15/2025 | 08/15/2025      | <https://cloudjourney.awsstudygroup.com/> |
+| Day | Task | Start date | Completion date | Reference |
+| --- | --- | --- | --- | --- |
+| Monday | - Test user flows: browse movie list, search, view details, and stream HLS video <br> - Record UI and API issues | 29/06/2026 | 29/06/2026 | Project test cases |
+| Tuesday | - Test admin flows: upload video, create MediaConvert job, update poster/subtitle <br> - Check data stored in RDS and S3 | 30/06/2026 | 30/06/2026 | RDS, S3, MediaConvert |
+| Wednesday | - Test EventBridge invoking Lambda when MediaConvert is COMPLETE/ERROR/CANCELED <br> - Check webhook `/api/uploads/mediaconvert/events` | 01/07/2026 | 01/07/2026 | EventBridge, Lambda |
+| Thursday | - Test `.srt` subtitle upload and Lambda conversion to `.vtt` <br> - Review Security Groups, IAM policies, and bucket permissions | 02/07/2026 | 02/07/2026 | Lambda, IAM |
+| Friday | - Check CloudWatch alarms, SNS topic `netflop-alerts`, Billing Dashboard, and AWS Budgets <br> - Summarize fixed issues and remaining limitations | 03/07/2026 | 03/07/2026 | CloudWatch, SNS |
 
+### Week 11 outcomes:
 
-### Week 11 Achievements:
-
-* Understood what AWS is and mastered the basic service groups: 
-  * Compute
-  * Storage
-  * Networking 
-  * Database
-  * ...
-
-* Successfully created and configured an AWS Free Tier account.
-
-* Became familiar with the AWS Management Console and learned how to find, access, and use services via the web interface.
-
-* Installed and configured AWS CLI on the computer, including:
-  * Access Key
-  * Secret Key
-  * Default Region
-  * ...
-
-* Used AWS CLI to perform basic operations such as:
-
-  * Check account & configuration information
-  * Retrieve the list of regions
-  * View EC2 service
-  * Create and manage key pairs
-  * Check information about running services
-  * ...
-
-* Acquired the ability to connect between the web interface and CLI to manage AWS resources in parallel.
-* ...
+* Completed the main features of Netflop at an internship demo level.
+* Tested user flows and admin flows.
+* Tested the upload video pipeline, MediaConvert, CloudFront HLS, and status update through Lambda/EventBridge.
+* Learned how to monitor logs, metrics, and alerts with CloudWatch/SNS.
+* Reviewed important security points such as Security Groups, IAM policies, S3 bucket permissions, and RDS public access.
+* Cleaned up unnecessary resources and improved cost control in the AWS account.

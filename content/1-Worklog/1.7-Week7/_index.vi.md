@@ -1,59 +1,31 @@
 ---
 title: "Worklog Tuần 7"
-date: 2024-01-01
-weight: 1
+date: 2026-06-01
+weight: 7
 chapter: false
 pre: " <b> 1.7. </b> "
 ---
-{{% notice warning %}}
-⚠️ **Lưu ý:** Các thông tin dưới đây chỉ nhằm mục đích tham khảo, vui lòng **không sao chép nguyên văn** cho bài báo cáo của bạn kể cả warning này.
-{{% /notice %}}
-
 
 ### Mục tiêu tuần 7:
 
-* Kết nối, làm quen với các thành viên trong First Cloud AI Journey.
-* Hiểu dịch vụ AWS cơ bản, cách dùng console & CLI.
+* Chuyển từ giai đoạn học dịch vụ AWS sang giai đoạn áp dụng vào dự án.
+* Phân tích yêu cầu website xem phim và xác định các chức năng chính.
+* Thiết kế kiến trúc hệ thống có sử dụng EC2, S3, RDS, VPC, IAM và CloudWatch.
 
 ### Các công việc cần triển khai trong tuần này:
-| Thứ | Công việc                                                                                                                                                                                   | Ngày bắt đầu | Ngày hoàn thành | Nguồn tài liệu                            |
-| --- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------ | --------------- | ----------------------------------------- |
-| 2   | - Làm quen với các thành viên FCAJ <br> - Đọc và lưu ý các nội quy, quy định tại đơn vị thực tập                                                                                             | 11/08/2025   | 11/08/2025      |
-| 3   | - Tìm hiểu AWS và các loại dịch vụ <br>&emsp; + Compute <br>&emsp; + Storage <br>&emsp; + Networking <br>&emsp; + Database <br>&emsp; + ... <br>                                            | 12/08/2025   | 12/08/2025      | <https://cloudjourney.awsstudygroup.com/> |
-| 4   | - Tạo AWS Free Tier account <br> - Tìm hiểu AWS Console & AWS CLI <br> - **Thực hành:** <br>&emsp; + Tạo AWS account <br>&emsp; + Cài AWS CLI & cấu hình <br> &emsp; + Cách sử dụng AWS CLI | 13/08/2025   | 13/08/2025      | <https://cloudjourney.awsstudygroup.com/> |
-| 5   | - Tìm hiểu EC2 cơ bản: <br>&emsp; + Instance types <br>&emsp; + AMI <br>&emsp; + EBS <br>&emsp; + ... <br> - Các cách remote SSH vào EC2 <br> - Tìm hiểu Elastic IP   <br>                  | 14/08/2025   | 15/08/2025      | <https://cloudjourney.awsstudygroup.com/> |
-| 6   | - **Thực hành:** <br>&emsp; + Tạo EC2 instance <br>&emsp; + Kết nối SSH <br>&emsp; + Gắn EBS volume                                                                                         | 15/08/2025   | 15/08/2025      | <https://cloudjourney.awsstudygroup.com/> |
 
+| Thứ | Công việc | Ngày bắt đầu | Ngày hoàn thành | Nguồn tài liệu |
+| --- | --- | --- | --- | --- |
+| 2 | - Xác định phạm vi dự án website xem phim <br> - Liệt kê chức năng người dùng: xem danh sách phim, tìm kiếm, xem chi tiết, xem video | 01/06/2026 | 01/06/2026 | Tài liệu dự án |
+| 3 | - Liệt kê chức năng quản trị: thêm phim, sửa thông tin phim, quản lý danh mục, quản lý tài khoản | 02/06/2026 | 02/06/2026 | Tài liệu dự án |
+| 4 | - Thiết kế kiến trúc tổng thể: frontend, backend API, database, object storage <br> - Xác định dịch vụ AWS tương ứng cho từng thành phần | 03/06/2026 | 03/06/2026 | <https://cloudjourney.awsstudygroup.com/1-explore/> |
+| 5 | - Vẽ sơ đồ triển khai ban đầu trên AWS <br> - Xác định luồng dữ liệu từ người dùng đến frontend, backend, RDS và S3 | 04/06/2026 | 04/06/2026 | AWS Architecture |
+| 6 | - Rà soát rủi ro kỹ thuật: chi phí, bảo mật bucket, truy cập database, giới hạn tài nguyên lab <br> - Chốt kế hoạch phát triển cho tuần 8 đến tuần 11 | 05/06/2026 | 05/06/2026 | AWS Well-Architected cơ bản |
 
 ### Kết quả đạt được tuần 7:
 
-* Hiểu AWS là gì và nắm được các nhóm dịch vụ cơ bản: 
-  * Compute
-  * Storage
-  * Networking 
-  * Database
-  * ...
-
-* Đã tạo và cấu hình AWS Free Tier account thành công.
-
-* Làm quen với AWS Management Console và biết cách tìm, truy cập, sử dụng dịch vụ từ giao diện web.
-
-* Cài đặt và cấu hình AWS CLI trên máy tính bao gồm:
-  * Access Key
-  * Secret Key
-  * Region mặc định
-  * ...
-
-* Sử dụng AWS CLI để thực hiện các thao tác cơ bản như:
-
-  * Kiểm tra thông tin tài khoản & cấu hình
-  * Lấy danh sách region
-  * Xem dịch vụ EC2
-  * Tạo và quản lý key pair
-  * Kiểm tra thông tin dịch vụ đang chạy
-  * ...
-
-* Có khả năng kết nối giữa giao diện web và CLI để quản lý tài nguyên AWS song song.
-* ...
-
-
+* Xác định được phạm vi dự án website xem phim ở mức phù hợp với thời gian thực tập.
+* Có danh sách chức năng chính cho người dùng và quản trị viên.
+* Thiết kế được kiến trúc ban đầu gồm frontend, backend, RDS database và S3 storage.
+* Hiểu cách ánh xạ kiến thức AWS đã học vào một bài toán ứng dụng thực tế.
+* Có kế hoạch triển khai rõ ràng cho giai đoạn phát triển dự án.
