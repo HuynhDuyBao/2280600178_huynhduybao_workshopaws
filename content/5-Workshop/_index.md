@@ -48,6 +48,10 @@ The sample code snippets are shortened from the current Netflop source code. Sen
 | Stream security | CloudFront signed cookies | HLS plays through CloudFront with temporary cookies |
 | Operations | CloudWatch, SNS, Cost Explorer | Alarm, logs, dashboard, or cost screenshots |
 
+#### Repository
+
+[Netflop source code](https://github.com/Danh0104/Web-xem-phim-Netflop.git)
+
 ### Demo Stream
 
 <div class="netflop-demo-player">
