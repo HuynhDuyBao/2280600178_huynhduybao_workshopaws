@@ -8,10 +8,6 @@ pre: " <b> 5.1. </b> "
 
 This section introduces the overall AWS architecture of **Netflop** and the role of each service group. It helps explain the web access flow, HLS video processing flow, and automatic episode status update flow.
 
-{{% notice info %}}
-Image needed: overall Netflop AWS architecture diagram.
-{{% /notice %}}
-
 ![](/2280600178_huynhduybao_workshopaws/images/5-Workshop/5.1-Workshop-overview/sodo.jpg)
 
 #### Contents
@@ -50,7 +46,4 @@ The workshop is based on a real movie streaming website with two user groups:
 | Subtitle converter Lambda | <code>aws/lambda/subtitle-converter</code> |
 | Database dump | <code>database/web_xem_phim_final_dump.sql</code> |
 
-{{% notice info %}}
-Screenshots needed: homepage, movie detail page, watch page, admin page, and user/admin permission flow.
-{{% /notice %}}
 <!-- NETFLOP_IMPLEMENTATION_END -->

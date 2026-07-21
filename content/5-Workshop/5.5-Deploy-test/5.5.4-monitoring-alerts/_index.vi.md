@@ -49,10 +49,6 @@ Topic này dùng để gửi cảnh báo khi CloudWatch alarm chuyển trạng t
 4. Vào SNS console kiểm tra topic `netflop-alerts`.
 5. Kiểm tra Billing Dashboard/AWS Budgets để theo dõi chi phí.
 
-{{% notice info %}}
-Cần thêm ảnh: CloudWatch alarms trạng thái OK, Lambda logs, SNS topic `netflop-alerts`, email subscription đã Confirmed và Billing Dashboard/Cost Explorer.
-{{% /notice %}}
-
 ![](/2280600178_huynhduybao_workshopaws/images/5-Workshop/5.5-Deploy-test/5.5.4-monitoring-alerts/cw1.png)
 ![](/2280600178_huynhduybao_workshopaws/images/5-Workshop/5.5-Deploy-test/5.5.4-monitoring-alerts/cw2.png)
 ![](/2280600178_huynhduybao_workshopaws/images/5-Workshop/5.5-Deploy-test/5.5.4-monitoring-alerts/sns.png)
@@ -137,7 +133,4 @@ aws cloudwatch put-metric-alarm \
 3. Vào Log groups nếu có cấu hình CloudWatch Agent.
 4. Kiểm tra email đã confirm SNS subscription.
 
-{{% notice info %}}
-Cần thêm ảnh: CloudWatch dashboard/alarm, SNS subscription confirmed, EC2 metric, RDS metric và Lambda log.
-{{% /notice %}}
 <!-- NETFLOP_IMPLEMENTATION_END -->

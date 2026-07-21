@@ -193,7 +193,4 @@ pm2 logs netflop-api
 curl -I http://127.0.0.1:5000/api/health
 ~~~
 
-{{% notice info %}}
-Screenshots needed: EC2 instance running, inbound security group, <code>pm2 status</code>, <code>systemctl status nginx</code>, and API health check.
-{{% /notice %}}
 <!-- NETFLOP_IMPLEMENTATION_END -->

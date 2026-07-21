@@ -183,7 +183,4 @@ const hls = new Hls({
 The player should not send credentials for non-signed public sources such as Cloudflare Stream, otherwise CORS can fail because wildcard origin is not valid with credentials.
 {{% /notice %}}
 
-{{% notice info %}}
-Screenshots needed: CloudFront distribution, behavior/cache policy, signed cookies in DevTools Application tab, and HLS requests returning 200.
-{{% /notice %}}
 <!-- NETFLOP_IMPLEMENTATION_END -->

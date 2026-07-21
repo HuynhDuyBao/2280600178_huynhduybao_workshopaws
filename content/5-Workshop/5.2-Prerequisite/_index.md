@@ -54,7 +54,4 @@ npm --prefix frontend run build
 
 If the frontend builds successfully and the backend can connect to local/RDS MySQL, the infrastructure setup can begin.
 
-{{% notice info %}}
-Screenshots needed: <code>aws sts get-caller-identity</code>, Node.js/npm versions, and successful frontend build.
-{{% /notice %}}
 <!-- NETFLOP_IMPLEMENTATION_END -->

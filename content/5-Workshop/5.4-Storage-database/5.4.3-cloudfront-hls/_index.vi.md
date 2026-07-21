@@ -59,10 +59,6 @@ API này dùng để xử lý một số trường hợp cần proxy media/phụ
 5. Kiểm tra request `/api/stream/session` trả cookie hợp lệ.
 6. Kiểm tra player tải `index.m3u8` và segment qua HTTPS.
 
-{{% notice info %}}
-Cần thêm ảnh: CloudFront distribution, origin S3 output, behavior/cookie policy nếu có, request `/api/stream/session`, video player phát HLS thành công và console không lộ raw S3 URL trong thông báo lỗi.
-{{% /notice %}}
-
 ![](/2280600178_huynhduybao_workshopaws/images/5-Workshop/5.4-Storage-database/5.4.3-cloudfront-hls/cloudfront1.png)
 ![](/2280600178_huynhduybao_workshopaws/images/5-Workshop/5.4-Storage-database/5.4.3-cloudfront-hls/cf2.png)
 ![](/2280600178_huynhduybao_workshopaws/images/5-Workshop/5.4-Storage-database/5.4.3-cloudfront-hls/player1.png)

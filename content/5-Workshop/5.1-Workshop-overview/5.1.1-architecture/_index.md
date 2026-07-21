@@ -201,7 +201,4 @@ const pool = mysql.createPool({
 pool.execute = pool.query.bind(pool);
 ~~~
 
-{{% notice info %}}
-Screenshots needed: custom architecture diagram, EC2 running, RDS available, S3 buckets, CloudFront distribution, and MediaConvert job.
-{{% /notice %}}
 <!-- NETFLOP_IMPLEMENTATION_END -->

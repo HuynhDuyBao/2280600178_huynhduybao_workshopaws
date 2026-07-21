@@ -39,10 +39,6 @@ Các điểm cần kiểm tra riêng:
 
 Người dùng có thể xem phim ổn định trên desktop và điện thoại, không gặp lỗi CORS/mixed content, không lộ raw stream URL trong thông báo lỗi, và dữ liệu cá nhân được tách theo từng tài khoản.
 
-{{% notice info %}}
-Cần thêm ảnh: homepage desktop, homepage mobile, movie card dạng slide ngang, trang chi tiết phim, player desktop/mobile, phụ đề đang bật, tiếp tục xem theo tài khoản và trang hồ sơ/avatar.
-{{% /notice %}}
-
 ![](/2280600178_huynhduybao_workshopaws/images/5-Workshop/5.5-Deploy-test/5.5.2-user-test/home.png)
 ![](/2280600178_huynhduybao_workshopaws/images/5-Workshop/5.5-Deploy-test/5.5.2-user-test/tieptucxem.png)
 ![](/2280600178_huynhduybao_workshopaws/images/5-Workshop/5.5-Deploy-test/5.5.2-user-test/tieptucxem2.png)

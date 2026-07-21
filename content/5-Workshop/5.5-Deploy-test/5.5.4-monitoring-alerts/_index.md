@@ -35,10 +35,6 @@ netflop-alerts
 4. Check SNS topic `netflop-alerts`.
 5. Check Billing Dashboard/AWS Budgets.
 
-{{% notice info %}}
-Image needed: CloudWatch alarms, Lambda logs, SNS topic `netflop-alerts`, and Billing Dashboard.
-{{% /notice %}}
-
 ![](/2280600178_huynhduybao_workshopaws/images/5-Workshop/5.5-Deploy-test/5.5.4-monitoring-alerts/cw1.png)
 ![](/2280600178_huynhduybao_workshopaws/images/5-Workshop/5.5-Deploy-test/5.5.4-monitoring-alerts/cw2.png)
 ![](/2280600178_huynhduybao_workshopaws/images/5-Workshop/5.5-Deploy-test/5.5.4-monitoring-alerts/sns.png)
@@ -121,7 +117,4 @@ aws cloudwatch put-metric-alarm \
 3. Open Log groups if CloudWatch Agent is configured.
 4. Confirm the SNS email subscription.
 
-{{% notice info %}}
-Screenshots needed: CloudWatch dashboard/alarm, confirmed SNS subscription, EC2 metric, RDS metric, and Lambda log.
-{{% /notice %}}
 <!-- NETFLOP_IMPLEMENTATION_END -->

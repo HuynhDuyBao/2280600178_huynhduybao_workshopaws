@@ -26,10 +26,6 @@ pre: " <b> 5.6.3. </b> "
 4. Check AWS Budgets alerts.
 5. Record cleanup results in the report.
 
-{{% notice info %}}
-Image needed: Billing Dashboard, Cost Explorer, or AWS Budgets after cleanup.
-{{% /notice %}}
-
 ![](/2280600178_huynhduybao_workshopaws/images/5-Workshop/5.6-Cleanup/5.6.3-cost-check/budget.png)
 
 <!-- NETFLOP_DETAIL_START -->

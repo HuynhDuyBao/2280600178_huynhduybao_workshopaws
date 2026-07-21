@@ -8,10 +8,6 @@ pre: " <b> 5.2. </b> "
 
 Trước khi triển khai Netflop lên AWS, cần chuẩn bị tài khoản AWS, source code, biến môi trường, database dump và các quyền IAM cần thiết. Đây là bước quan trọng vì hệ thống sử dụng nhiều dịch vụ liên kết với nhau: EC2, RDS, S3, MediaConvert, CloudFront, Lambda, EventBridge và CloudWatch.
 
-{{% notice info %}}
-Cần thêm ảnh: cấu trúc source code Netflop, AWS CLI đã đăng nhập đúng account/region, và file `.env` mẫu đã che secret.
-{{% /notice %}}
-
 #### Nội dung
 
 1. [Chuẩn bị AWS và IAM](5.2.1-aws-iam/)
@@ -81,7 +77,4 @@ npm --prefix frontend run build
 
 Nếu build frontend thành công và backend kết nối được database local/RDS, có thể chuyển sang triển khai hạ tầng.
 
-{{% notice info %}}
-Cần thêm ảnh: kết quả <code>aws sts get-caller-identity</code>, phiên bản Node.js/npm và frontend build thành công.
-{{% /notice %}}
 <!-- NETFLOP_IMPLEMENTATION_END -->

@@ -58,10 +58,6 @@ Với video khoảng 5GB, cần xác nhận:
 * Người dùng phát được video qua CloudFront.
 * Admin nhìn thấy tiến trình và kết quả hoàn thành ngay trên UI.
 
-{{% notice info %}}
-Cần thêm ảnh: admin upload video, thanh tiến trình upload/processing/completed, object S3 input, MediaConvert job Complete, HLS output, bảng tập phim trạng thái hoàn thành và player phát tập vừa upload.
-{{% /notice %}}
-
 ![](/2280600178_huynhduybao_workshopaws/images/5-Workshop/5.5-Deploy-test/5.5.3-admin-upload-video/adminin1.png)
 ![](/2280600178_huynhduybao_workshopaws/images/5-Workshop/5.5-Deploy-test/5.5.3-admin-upload-video/adminput1.png)
 ![](/2280600178_huynhduybao_workshopaws/images/5-Workshop/5.5-Deploy-test/5.5.3-admin-upload-video/adminup1.png)

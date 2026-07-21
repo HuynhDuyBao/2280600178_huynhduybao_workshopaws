@@ -61,10 +61,6 @@ curl https://netflop.win/api/movies?limit=12
 
 If the API returns movie/genre data correctly, the backend has successfully connected to RDS.
 
-{{% notice info %}}
-Add images: RDS `netflop-db` status Available, RDS endpoint, Security Group inbound rules restricted to EC2, database import results, and successful API data responses.
-{{% /notice %}}
-
 <!-- NETFLOP_DETAIL_START -->
 #### How to create and import RDS
 
@@ -158,7 +154,4 @@ const pool = mysql.createPool({
 3. Sign in and sign up work.
 4. Admin can see movies and episodes.
 
-{{% notice info %}}
-Screenshots needed: RDS available, RDS endpoint, security group inbound from EC2 only, successful import, and API movie response.
-{{% /notice %}}
 <!-- NETFLOP_IMPLEMENTATION_END -->

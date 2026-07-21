@@ -68,10 +68,6 @@ The admin interface should clearly display:
 5. Open the video player and enable subtitles.
 6. Verify that subtitles display correctly without duplicate lines on mobile.
 
-{{% notice info %}}
-Image needed: admin subtitle upload, `.srt` input object, Lambda log output, `.vtt` output object, and subtitle display in the player.
-{{% /notice %}}
-
 <!-- NETFLOP_DETAIL_START -->
 #### How subtitle upload and conversion works
 
@@ -185,7 +181,4 @@ const tracks = subtitles
   }));
 ~~~
 
-{{% notice info %}}
-Screenshots needed: admin subtitle upload UI, SRT file in S3 input, VTT file in S3 output, Lambda invocation log, and CC selector in the player.
-{{% /notice %}}
 <!-- NETFLOP_IMPLEMENTATION_END -->

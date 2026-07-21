@@ -129,7 +129,4 @@ await pool.execute(
 * Account B does not see account A's continue-watching item.
 * When the user clicks Continue Watching, the player seeks to the saved position.
 
-{{% notice info %}}
-Screenshots needed: account center, watch history, continue watching, history table in database, and player resume position.
-{{% /notice %}}
 <!-- NETFLOP_IMPLEMENTATION_END -->

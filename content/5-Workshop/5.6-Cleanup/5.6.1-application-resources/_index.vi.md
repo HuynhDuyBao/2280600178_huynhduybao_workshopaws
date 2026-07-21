@@ -36,10 +36,6 @@ Không xóa RDS production nếu chưa backup. Trước khi dọn:
 * Security Group gọn và an toàn hơn.
 * Database production có backup trước khi thay đổi lớn.
 
-{{% notice info %}}
-Cần thêm ảnh: EC2 instance list, EBS volumes, Elastic IP, Security Group inbound, RDS snapshot và IAM access key đã vô hiệu hóa nếu không dùng.
-{{% /notice %}}
-
 <!-- NETFLOP_DETAIL_START -->
 #### Cách cleanup tài nguyên ứng dụng
 

@@ -125,7 +125,4 @@ curl -I https://netflop.win
 curl https://netflop.win/api/health
 ~~~
 
-{{% notice info %}}
-Screenshots needed: successful deploy terminal, <code>pm2 status</code>, active Nginx, API health check, and website UI after deployment.
-{{% /notice %}}
 <!-- NETFLOP_IMPLEMENTATION_END -->

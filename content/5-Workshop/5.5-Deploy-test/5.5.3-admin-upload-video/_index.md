@@ -26,10 +26,6 @@ pre: " <b> 5.5.3. </b> "
 * `cloudfront_url`
 * `upload_status`
 
-{{% notice info %}}
-Image needed: admin upload screen, S3 input object, MediaConvert Complete job, HLS output, and episode ready status.
-{{% /notice %}}
-
 ![](/2280600178_huynhduybao_workshopaws/images/5-Workshop/5.5-Deploy-test/5.5.3-admin-upload-video/adminin1.png)
 ![](/2280600178_huynhduybao_workshopaws/images/5-Workshop/5.5-Deploy-test/5.5.3-admin-upload-video/adminput1.png)
 ![](/2280600178_huynhduybao_workshopaws/images/5-Workshop/5.5-Deploy-test/5.5.3-admin-upload-video/adminup1.png)
@@ -174,7 +170,4 @@ const response = await fetch(webhookUrl, {
 });
 ~~~
 
-{{% notice info %}}
-Screenshots needed: admin upload form, upload progress bar, S3 input file, MediaConvert job COMPLETE, Lambda log, episode table ready, and player playing the new episode.
-{{% /notice %}}
 <!-- NETFLOP_IMPLEMENTATION_END -->

@@ -10,10 +10,6 @@ Phần này giới thiệu kiến trúc tổng thể của website xem phim **Ne
 
 Netflop không chỉ là một website CRUD đơn giản. Hệ thống có pipeline media riêng gồm upload file lớn, lưu file gốc, chuyển mã, lưu HLS output, phát qua CDN, bảo vệ link stream và cập nhật trạng thái tập phim tự động.
 
-{{% notice info %}}
-Cần thêm ảnh: sơ đồ kiến trúc tổng quan Netflop trên AWS; nên thể hiện rõ nhóm Application, Database, Media Processing, CDN/Security và Monitoring.
-{{% /notice %}}
-
 ![](/2280600178_huynhduybao_workshopaws/images/5-Workshop/5.1-Workshop-overview/sodo.jpg)
 
 #### Nội dung
@@ -67,7 +63,4 @@ Workshop được xây dựng theo kịch bản một website xem phim có hai n
 | Lambda subtitle converter | <code>aws/lambda/subtitle-converter</code> |
 | Database dump | <code>database/web_xem_phim_final_dump.sql</code> |
 
-{{% notice info %}}
-Cần thêm ảnh: trang chủ, trang chi tiết phim, trang watch, trang admin và sơ đồ phân quyền user/admin.
-{{% /notice %}}
 <!-- NETFLOP_IMPLEMENTATION_END -->

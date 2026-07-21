@@ -68,10 +68,6 @@ Trang quản trị nên hiển thị rõ:
 5. Mở video player và bật phụ đề.
 6. Kiểm tra phụ đề chỉ hiển thị một lớp, không bị trùng trên mobile.
 
-{{% notice info %}}
-Cần thêm ảnh: admin upload phụ đề, file `.srt` input, S3 trigger, Lambda log, file `.vtt` output và phụ đề hiển thị đúng trên player desktop/mobile.
-{{% /notice %}}
-
 <!-- NETFLOP_DETAIL_START -->
 #### Cách thực hiện upload và chuyển phụ đề
 
@@ -185,7 +181,4 @@ const tracks = subtitles
   }));
 ~~~
 
-{{% notice info %}}
-Cần thêm ảnh: giao diện admin upload phụ đề, file SRT ở S3 input, file VTT ở S3 output, Lambda invocation log và selector CC trong player.
-{{% /notice %}}
 <!-- NETFLOP_IMPLEMENTATION_END -->

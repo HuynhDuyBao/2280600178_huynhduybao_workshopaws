@@ -146,7 +146,4 @@ aws s3 ls s3://netflop-output-source
 aws mediaconvert describe-endpoints --region ap-southeast-1
 ~~~
 
-{{% notice info %}}
-Cần thêm ảnh: EC2 instance profile, IAM role policy, MediaConvert role trust relationship và kết quả AWS CLI kiểm tra quyền.
-{{% /notice %}}
 <!-- NETFLOP_IMPLEMENTATION_END -->

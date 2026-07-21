@@ -8,10 +8,6 @@ pre: " <b> 5.3. </b> "
 
 Phần này trình bày các bước tạo hạ tầng nền cho Netflop: domain, EC2, Nginx, backend runtime, RDS MySQL và Security Group. Đây là lớp chạy ứng dụng chính trước khi cấu hình pipeline media.
 
-{{% notice info %}}
-Cần thêm ảnh: Cloudflare DNS cho `netflop.win`, EC2 `netflop-web` đang running, Nginx/PM2 running và RDS `netflop-db` available.
-{{% /notice %}}
-
 ![](/2280600178_huynhduybao_workshopaws/images/5-Workshop/5.3-AWS-infrastructure/rds.png)
 
 #### Nội dung

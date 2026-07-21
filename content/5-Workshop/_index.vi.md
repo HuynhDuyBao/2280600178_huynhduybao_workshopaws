@@ -12,10 +12,6 @@ Phần workshop mô tả quá trình triển khai website xem phim **Netflop** l
 
 Mục tiêu của chương này là trình bày được cách xây dựng một hệ thống xem phim có khả năng upload video dung lượng lớn, tự động chuyển đổi sang HLS nhiều độ phân giải, phát video qua CDN, lưu lịch sử xem theo tài khoản, hỗ trợ phụ đề và theo dõi trạng thái vận hành bằng CloudWatch.
 
-{{% notice info %}}
-Cần thêm ảnh: sơ đồ kiến trúc tổng quan Netflop theo luồng Cloudflare -> EC2/Nginx -> RDS/S3 -> MediaConvert -> CloudFront -> Video Player. Không chụp hoặc đưa vào báo cáo các secret như access key, client secret, JWT secret, webhook secret.
-{{% /notice %}}
-
 #### Nội dung
 
 1. [Tổng quan workshop](5.1-Workshop-overview/)

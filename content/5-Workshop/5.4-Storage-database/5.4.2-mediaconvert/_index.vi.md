@@ -73,10 +73,6 @@ Frontend admin hiển thị thanh tiến trình theo các giai đoạn: upload l
 4. Vào S3 output kiểm tra file `index.m3u8` và segment.
 5. Mở tập phim trên web để kiểm tra player.
 
-{{% notice info %}}
-Cần thêm ảnh: MediaConvert job detail, input S3 path, output HLS path, job status COMPLETE và thanh tiến trình upload/convert trong admin.
-{{% /notice %}}
-
 ![](/2280600178_huynhduybao_workshopaws/images/5-Workshop/5.4-Storage-database/5.4.2-mediaconvert/mediaconvert.png)
 ![](/2280600178_huynhduybao_workshopaws/images/5-Workshop/5.4-Storage-database/5.4.2-mediaconvert/hls.png)
 

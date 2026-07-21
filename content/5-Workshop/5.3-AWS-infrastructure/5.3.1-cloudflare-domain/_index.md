@@ -84,7 +84,4 @@ curl -I https://netflop.win/api/health
 | OAuth redirect mismatch | Google/Cognito callback still points to localhost or EC2 DNS | Add <code>https://netflop.win/auth/callback</code> |
 | API timeout | Nginx/PM2/backend or security group problem | Check PM2, Nginx, and inbound ports 80/443 |
 
-{{% notice info %}}
-Screenshots needed: Cloudflare DNS records, SSL/TLS mode, website through https://netflop.win, and OAuth callback using the domain.
-{{% /notice %}}
 <!-- NETFLOP_IMPLEMENTATION_END -->

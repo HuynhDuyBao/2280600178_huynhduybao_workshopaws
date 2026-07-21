@@ -98,10 +98,6 @@ Lambda chuyển .srt sang .vtt nếu cần
 Video Player load subtitle track
 ```
 
-{{% notice info %}}
-Cần thêm ảnh: sơ đồ luồng truy cập chính; sơ đồ upload video -> MediaConvert -> CloudFront; sơ đồ EventBridge -> Lambda -> Backend webhook; sơ đồ phụ đề SRT -> VTT.
-{{% /notice %}}
-
 ![](/2280600178_huynhduybao_workshopaws/images/5-Workshop/5.1-Workshop-overview/5.1.1-architecture/sodo.jpg)
 
 <!-- NETFLOP_DETAIL_START -->
@@ -205,7 +201,4 @@ const pool = mysql.createPool({
 pool.execute = pool.query.bind(pool);
 ~~~
 
-{{% notice info %}}
-Cần thêm ảnh: sơ đồ kiến trúc tự vẽ, EC2 đang chạy, RDS available, S3 buckets, CloudFront distribution và MediaConvert job.
-{{% /notice %}}
 <!-- NETFLOP_IMPLEMENTATION_END -->

@@ -63,10 +63,6 @@ aws s3 ls s3://netflop-input-source
 aws s3 ls s3://netflop-output-source
 ```
 
-{{% notice info %}}
-Cần thêm ảnh: danh sách hai bucket S3, object video gốc trong input, thư mục HLS output, ảnh avatar/banner trên S3 và màn hình upload file lớn ở admin.
-{{% /notice %}}
-
 ![](/2280600178_huynhduybao_workshopaws/images/5-Workshop/5.4-Storage-database/5.4.1-s3-buckets/s3input.png)
 ![](/2280600178_huynhduybao_workshopaws/images/5-Workshop/5.4-Storage-database/5.4.1-s3-buckets/s3ouput.png)
 
