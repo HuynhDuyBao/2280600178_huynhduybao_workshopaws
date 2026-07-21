@@ -1,0 +1,132 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="966" height="466" viewBox="0 0 966 466" role="img" aria-labelledby="title desc">
+  <title id="title">S3, MediaConvert, CloudFront, and website streaming flow</title>
+  <desc id="desc">A media streaming workflow where a movie file is uploaded to an S3 input bucket, processed by AWS Elemental MediaConvert, written as m3u8 and ts files to an S3 output bucket, delivered through CloudFront and an S3 website, then played on mobile and desktop devices.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M1 1 L11 6 L1 11" fill="none" stroke="#159bd7" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+    <style>
+      .label{font-family:Arial,Helvetica,sans-serif;font-size:18px;fill:#111;text-anchor:middle}
+      .small{font-size:15px}
+      .tiny{font-size:14px}
+      .bluefile{fill:#2b95cc}
+      .orangefile{fill:#f5a24b}
+      .bucket{fill:#d83a35;stroke:#fff;stroke-width:2}
+      .icon{fill:none;stroke:#fff;stroke-width:4;stroke-linecap:round;stroke-linejoin:round}
+      .flow{fill:none;stroke:#159bd7;stroke-width:5;marker-end:url(#arrow)}
+      .dash{fill:none;stroke:#8ecf91;stroke-width:5;stroke-dasharray:5 5;marker-end:url(#arrow)}
+    </style>
+  </defs>
+
+  <rect width="966" height="466" fill="#fff"/>
+  <rect x="7" y="38" width="800" height="400" rx="32" fill="none" stroke="#222" stroke-width="3"/>
+  <rect x="3" y="6" width="462" height="449" fill="none" stroke="#f20b22" stroke-width="3"/>
+
+  <g transform="translate(38 15)">
+    <path d="M19 43c-20 0-24-31-3-36C22-7 45-1 49 14c13-2 25 8 25 22 0 14-11 24-25 24H19z" fill="#ff8b3d"/>
+    <text x="36" y="42" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="19" font-weight="700" fill="#fff">AWS</text>
+  </g>
+
+  <g transform="translate(24 61)">
+    <rect x="0" y="0" width="69" height="78" rx="5" fill="#159f92" stroke="#222" stroke-width="3"/>
+    <path d="M24 22v35l28-18z" fill="#fff"/>
+    <path d="M7 8v62M62 8v62" stroke="#222" stroke-width="4" stroke-dasharray="5 5"/>
+    <text class="label small" x="35" y="104">Movie File</text>
+  </g>
+
+  <path class="dash" d="M58 143v104"/>
+
+  <g transform="translate(20 250)">
+    <path class="bucket" d="M0 10c0-13 78-13 78 0v57c0 13-78 13-78 0z"/>
+    <ellipse cx="39" cy="10" rx="39" ry="12" fill="#ef534d" stroke="#fff" stroke-width="2"/>
+    <circle cx="22" cy="52" r="6" fill="#fff"/>
+    <circle cx="56" cy="52" r="6" fill="#fff"/>
+    <path d="M33 27h14l-7 13z" fill="#fff"/>
+    <text class="label" x="39" y="98">S3</text>
+    <text class="label small" x="39" y="118">input-bucket</text>
+  </g>
+
+  <g transform="translate(169 239)">
+    <rect width="97" height="97" fill="#ff8b00"/>
+    <path class="icon" d="M30 36l19-11 19 11v28L49 75 30 64z"/>
+    <path class="icon" d="M49 25v19l19 11M49 44L30 55"/>
+    <path class="icon" d="M22 31v-8l7-4M76 31v-8l-7-4M22 70v8l7 4M76 70v8l-7 4"/>
+    <text class="label" x="49" y="121">AWS Elemental MediaConvert</text>
+  </g>
+
+  <g transform="translate(319 130)">
+    <path class="bluefile" d="M0 0h33l12 12v65H0z"/>
+    <path d="M33 0v12h12" fill="#1e7198"/>
+    <text class="label small" x="23" y="104">m3u8</text>
+  </g>
+
+  <g transform="translate(393 130)">
+    <path class="orangefile" d="M0 0h33l12 12v65H0z"/>
+    <path d="M33 0v12h12" fill="#c77f35"/>
+    <text class="label small" x="23" y="104">ts</text>
+  </g>
+
+  <path d="M304 220c0 12 8 14 21 14h29c14 0 16 9 16 14 0-5 2-14 16-14h30c13 0 21-2 21-14" fill="none" stroke="#111" stroke-width="3"/>
+
+  <g transform="translate(340 250)">
+    <path class="bucket" d="M0 10c0-13 78-13 78 0v57c0 13-78 13-78 0z"/>
+    <ellipse cx="39" cy="10" rx="39" ry="12" fill="#ef534d" stroke="#fff" stroke-width="2"/>
+    <circle cx="22" cy="52" r="6" fill="#fff"/>
+    <circle cx="56" cy="52" r="6" fill="#fff"/>
+    <path d="M33 27h14l-7 13z" fill="#fff"/>
+    <text class="label" x="39" y="98">S3</text>
+    <text class="label small" x="39" y="118">output-bucket</text>
+  </g>
+
+  <g transform="translate(489 230)">
+    <path d="M0 30l65-26 65 26-65 26z" fill="#f47b20"/>
+    <path d="M0 71l65-26 65 26-65 26z" fill="#f47b20"/>
+    <path d="M33 17v68M65 4v93M98 17v68" stroke="#cf5519" stroke-width="4"/>
+    <text class="label" x="65" y="139">CloudFront</text>
+  </g>
+
+  <g transform="translate(626 119)">
+    <path class="bluefile" d="M0 0h43l14 14v70H0z"/>
+    <path d="M43 0v14h14" fill="#1e7198"/>
+    <rect x="0" y="41" width="52" height="32" fill="#333"/>
+    <text x="26" y="64" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="19" fill="#fff">HTML</text>
+  </g>
+
+  <g transform="translate(713 119)">
+    <path class="bluefile" d="M0 0h43l14 14v70H0z"/>
+    <path d="M43 0v14h14" fill="#1e7198"/>
+    <rect x="0" y="41" width="52" height="32" fill="#333"/>
+    <text x="26" y="64" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="19" fill="#fff">JS</text>
+  </g>
+
+  <path d="M623 219c0 12 8 14 21 14h35c14 0 16 9 16 14 0-5 2-14 16-14h36c13 0 21-2 21-14" fill="none" stroke="#111" stroke-width="3"/>
+
+  <g transform="translate(662 250)">
+    <path class="bucket" d="M0 10c0-13 78-13 78 0v57c0 13-78 13-78 0z"/>
+    <ellipse cx="39" cy="10" rx="39" ry="12" fill="#ef534d" stroke="#fff" stroke-width="2"/>
+    <circle cx="22" cy="52" r="6" fill="#fff"/>
+    <circle cx="56" cy="52" r="6" fill="#fff"/>
+    <path d="M33 27h14l-7 13z" fill="#fff"/>
+    <text class="label" x="39" y="98">S3</text>
+    <text class="label small" x="39" y="118">Website</text>
+  </g>
+
+  <g transform="translate(884 119)">
+    <rect x="0" y="0" width="58" height="111" rx="4" fill="#111"/>
+    <rect x="7" y="9" width="44" height="85" fill="#fff"/>
+    <circle cx="29" cy="102" r="5" fill="#fff"/>
+  </g>
+
+  <g transform="translate(862 328)">
+    <rect x="0" y="0" width="96" height="63" fill="#111"/>
+    <rect x="8" y="8" width="80" height="47" fill="#fff"/>
+    <path d="M48 63v24M25 87h46" stroke="#111" stroke-width="7" stroke-linecap="round"/>
+  </g>
+
+  <path class="flow" d="M98 288h67"/>
+  <path class="flow" d="M266 288h70"/>
+  <path class="flow" d="M418 288h75"/>
+  <path class="flow" d="M619 288h39"/>
+  <path class="flow" d="M740 288h70v-117h69"/>
+  <path class="flow" d="M740 288h70v73h48"/>
+</svg>

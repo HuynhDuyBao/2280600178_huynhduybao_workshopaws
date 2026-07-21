@@ -1,0 +1,124 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1492" height="860" viewBox="0 0 1492 860" role="img" aria-labelledby="title desc">
+  <title id="title">AWS media workflow with S3, Lambda, MediaConvert, CloudFront, CloudWatch, EventBridge, and SNS</title>
+  <desc id="desc">Architecture diagram showing a source S3 bucket triggering Lambda, MediaConvert, destination S3, CloudFront, CloudWatch, EventBridge, a completion Lambda, and Simple Notification Service.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="14" markerHeight="14" refX="12" refY="7" orient="auto">
+      <path d="M1 1 L13 7 L1 13" fill="none" stroke="#f7f7f7" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+    <style>
+      .bg{fill:#171717}
+      .line{fill:none;stroke:#f7f7f7;stroke-width:3.5;stroke-linecap:round;stroke-linejoin:round;marker-end:url(#arrow)}
+      .plain{fill:none;stroke:#f7f7f7;stroke-width:3.5;stroke-linecap:round;stroke-linejoin:round}
+      .label{fill:#fff;font-family:Arial,Helvetica,sans-serif;font-size:30px;font-weight:700;text-anchor:middle}
+      .small{font-size:27px}
+      .icon{fill:none;stroke:#fff;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+      .aws-orange{fill:#ff9900}
+      .aws-green{fill:#3f8624}
+      .aws-purple{fill:#7b42e9}
+      .aws-pink{fill:#d92872}
+    </style>
+  </defs>
+  <rect class="bg" width="1492" height="860"/>
+  <g transform="translate(32 350)">
+    <rect class="aws-green" width="108" height="108"/>
+    <path class="icon" d="M18 28c0-11 72-11 72 0v53c0 11-72 11-72 0z"/>
+    <path class="icon" d="M18 28c0 11 72 11 72 0"/>
+    <path class="icon" d="M54 44l30 13"/>
+    <circle cx="54" cy="44" r="3" fill="#fff"/>
+    <text class="label" x="54" y="136">Amazon S3</text>
+    <text class="label small" x="54" y="172">(source)</text>
+  </g>
+  <g transform="translate(370 350)">
+    <rect class="aws-orange" width="108" height="108"/>
+    <path class="icon" d="M34 83l25-57h17l-25 57z"/>
+    <path class="icon" d="M38 18h28l25 64"/>
+    <text class="label" x="54" y="136">AWS Lambda</text>
+    <text class="label small" x="54" y="172">(job submit)</text>
+  </g>
+  <g transform="translate(578 162)">
+    <rect class="aws-orange" width="108" height="108"/>
+    <path class="icon" d="M33 39l21-12 21 12v30L54 81 33 69z"/>
+    <path class="icon" d="M54 27v22l21 12"/>
+    <path class="icon" d="M54 49L33 61"/>
+    <path class="icon" d="M24 33v-8l8-5"/>
+    <path class="icon" d="M84 33v-8l-8-5"/>
+    <path class="icon" d="M24 75v8l8 5"/>
+    <path class="icon" d="M84 75v8l-8 5"/>
+    <text class="label" x="54" y="136">AWS</text>
+    <text class="label" x="54" y="172">Elemental</text>
+    <text class="label" x="54" y="208">MediaConvert</text>
+  </g>
+  <g transform="translate(927 28)">
+    <rect class="aws-green" width="108" height="108"/>
+    <path class="icon" d="M18 28c0-11 72-11 72 0v53c0 11-72 11-72 0z"/>
+    <path class="icon" d="M18 28c0 11 72 11 72 0"/>
+    <path class="icon" d="M54 44l30 13"/>
+    <circle cx="54" cy="44" r="3" fill="#fff"/>
+    <text class="label" x="54" y="136">Amazon S3</text>
+    <text class="label small" x="54" y="172">(destination)</text>
+  </g>
+  <g transform="translate(1245 10)">
+    <rect class="aws-purple" width="108" height="108"/>
+    <circle class="icon" cx="54" cy="54" r="36"/>
+    <path class="icon" d="M25 64l18-31 24 7 16 28"/>
+    <circle class="icon" cx="43" cy="33" r="6"/>
+    <circle class="icon" cx="67" cy="40" r="6"/>
+    <circle class="icon" cx="83" cy="68" r="6"/>
+    <circle class="icon" cx="25" cy="64" r="6"/>
+    <text class="label" x="54" y="136">Amazon</text>
+    <text class="label" x="54" y="172">CloudFront</text>
+  </g>
+  <g transform="translate(927 268)">
+    <rect class="aws-pink" width="108" height="108"/>
+    <path class="icon" d="M31 67c-15 0-18-25 0-28 3-20 34-22 40-3 15 0 22 14 16 25"/>
+    <circle class="icon" cx="68" cy="68" r="19"/>
+    <circle class="icon" cx="68" cy="68" r="10"/>
+    <path class="icon" d="M82 82l19 19"/>
+    <text class="label" x="54" y="136">Amazon</text>
+    <text class="label" x="54" y="172">CloudWatch</text>
+  </g>
+  <g transform="translate(843 510)">
+    <rect class="aws-pink" width="108" height="108"/>
+    <circle class="icon" cx="37" cy="27" r="7"/>
+    <circle class="icon" cx="79" cy="37" r="7"/>
+    <circle class="icon" cx="82" cy="78" r="7"/>
+    <circle class="icon" cx="31" cy="72" r="7"/>
+    <path class="icon" d="M44 32h20l11 13M77 45l-11 23h-22l-10-16M44 68l-7-28"/>
+    <text class="label" x="54" y="136">Amazon</text>
+    <text class="label" x="54" y="172">EventBridge</text>
+  </g>
+  <g transform="translate(1110 587)">
+    <rect class="aws-orange" width="108" height="108"/>
+    <path class="icon" d="M34 83l25-57h17l-25 57z"/>
+    <path class="icon" d="M38 18h28l25 64"/>
+    <text class="label" x="54" y="136">AWS Lambda</text>
+    <text class="label small" x="54" y="172">(job</text>
+    <text class="label small" x="54" y="208">complete)</text>
+  </g>
+  <g transform="translate(1351 587)">
+    <rect class="aws-pink" width="108" height="108"/>
+    <circle class="icon" cx="52" cy="53" r="35"/>
+    <path class="icon" d="M34 39h37l-11 15v18l-14 7v-25z"/>
+    <path class="icon" d="M15 53h17M87 53h16M87 34h16M87 72h16"/>
+    <circle cx="15" cy="53" r="4" fill="#fff"/>
+    <circle cx="103" cy="53" r="4" fill="#fff"/>
+    <circle cx="103" cy="34" r="4" fill="#fff"/>
+    <circle cx="103" cy="72" r="4" fill="#fff"/>
+    <text class="label" x="54" y="136">Amazon</text>
+    <text class="label" x="54" y="172">Simple</text>
+    <text class="label" x="54" y="208">Notification</text>
+    <text class="label" x="54" y="244">Service</text>
+  </g>
+  <path class="line" d="M140 373H340"/>
+  <path class="line" d="M140 405H340"/>
+  <path class="plain" d="M370 405H224c-10 0-16 6-16 16v365c0 10 6 17 17 17h769c18 0 28-9 28-27V639c0-19 10-31 31-31h54"/>
+  <path class="line" d="M478 405h49c0-112 0-167 50-167"/>
+  <path class="line" d="M140 373h196c16 0 23-8 23-24V207c0-16 8-23 25-23h190"/>
+  <path class="line" d="M686 184h115c6 0 10-4 10-10v-77c0-12 9-19 22-19h92"/>
+  <path class="line" d="M686 212h119c0 73 0 104 35 104h84"/>
+  <path class="line" d="M686 237h48c29 0 31 11 31 35v247c0 28 10 39 38 39h37"/>
+  <path class="line" d="M1035 60h208"/>
+  <path class="plain" d="M1035 94h108c15 0 22 8 22 23v466"/>
+  <path class="line" d="M951 558h52c22 0 26 13 33 30h71"/>
+  <path class="line" d="M1218 641h130"/>
+</svg>
