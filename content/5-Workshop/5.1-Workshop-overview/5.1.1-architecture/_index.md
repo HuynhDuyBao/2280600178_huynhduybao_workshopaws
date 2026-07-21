@@ -143,3 +143,65 @@ const job = await mediaConvertService.createHlsJob({
 });
 ~~~
 <!-- NETFLOP_DETAIL_END -->
+
+<!-- NETFLOP_IMPLEMENTATION_START -->
+#### Netflop deployment architecture
+
+The current architecture is a traditional web application running on EC2, combined with managed AWS services for database, media processing, CDN delivery, serverless events, and monitoring. The Node.js backend does not keep large video files on EC2 disk. It coordinates uploads to S3 and stores metadata in RDS.
+
+#### Main request flow
+
+1. Users access <code>netflop.win</code> through Cloudflare.
+2. Nginx on EC2 serves the built React frontend.
+3. Requests under <code>/api/*</code> are reverse proxied to the Node.js backend running under PM2.
+4. Backend reads and writes movie, user, episode, subtitle, and history data in RDS MySQL.
+5. Admin-uploaded videos are stored in the S3 input bucket.
+6. Backend creates a MediaConvert job to generate HLS output in the S3 output bucket.
+7. The video player plays HLS through CloudFront, optionally protected by signed cookies.
+
+#### Upload and playback flow
+
+~~~text
+Admin browser
+  -> React admin UI
+  -> Backend API /uploads/videos/multipart/*
+  -> S3 input bucket
+  -> MediaConvert
+  -> S3 output bucket
+  -> CloudFront
+  -> Video player
+~~~
+
+#### Source files showing this architecture
+
+| Purpose | Source file |
+| --- | --- |
+| Server bootstrap | <code>backend/src/server.js</code> |
+| API routing | <code>backend/src/routes/index.js</code> |
+| RDS connection | <code>backend/src/config/database.js</code> |
+| S3 upload service | <code>backend/src/services/awsS3.service.js</code> |
+| MediaConvert job creation | <code>backend/src/services/mediaConvert.service.js</code> |
+| HLS video player | <code>frontend/src/components/VideoPlayer.jsx</code> |
+
+#### RDS connection sample
+
+~~~js
+const pool = mysql.createPool({
+  host: env.db.host,
+  port: env.db.port,
+  database: env.db.database,
+  user: env.db.user,
+  password: env.db.password,
+  waitForConnections: true,
+  connectionLimit: env.db.connectionLimit,
+  charset: 'utf8mb4',
+  namedPlaceholders: true
+});
+
+pool.execute = pool.query.bind(pool);
+~~~
+
+{{% notice info %}}
+Screenshots needed: custom architecture diagram, EC2 running, RDS available, S3 buckets, CloudFront distribution, and MediaConvert job.
+{{% /notice %}}
+<!-- NETFLOP_IMPLEMENTATION_END -->

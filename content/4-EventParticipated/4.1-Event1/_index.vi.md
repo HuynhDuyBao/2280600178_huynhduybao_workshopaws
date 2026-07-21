@@ -1,14 +1,12 @@
 ---
-title: "Event 1"
+title: "FCAJ Community Day"
 date: 2026-06-27
 weight: 1
 chapter: false
 pre: " <b> 4.1. </b> "
 ---
 
-{{% notice warning %}}
-⚠️ **Lưu ý:** Các thông tin dưới đây chỉ nhằm mục đích tham khảo, vui lòng **không sao chép nguyên văn** cho bài báo cáo của bạn kể cả warning này.
-{{% /notice %}}
+
 
 # Bài thu hoạch "FCAJ Community Day - June 2026"
 

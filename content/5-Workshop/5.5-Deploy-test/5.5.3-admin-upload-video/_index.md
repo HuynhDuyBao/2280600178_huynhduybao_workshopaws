@@ -99,3 +99,82 @@ const job = await mediaConvertService.createHlsJob({
 6. Confirm episode status becomes ready.
 7. Open the user website and play the uploaded episode.
 <!-- NETFLOP_DETAIL_END -->
+
+<!-- NETFLOP_IMPLEMENTATION_START -->
+#### Admin episode upload test
+
+This is the most important workshop feature because it combines frontend, backend, S3, MediaConvert, Lambda, and CloudFront.
+
+#### UI test steps
+
+1. Sign in as administrator.
+2. Open episode management or the Video & Trailer step in add/edit movie.
+3. Enter movie ID, episode name, and optional episode banner.
+4. Select an MP4/MKV file.
+5. Click upload video.
+6. Watch the multipart upload progress bar.
+7. After upload finishes, the status changes to MediaConvert processing.
+8. When the job completes, the episode status becomes ready/completed.
+9. Open the watch page and play the new episode.
+
+#### Frontend chunk upload sample
+
+~~~js
+for (let offset = 0, partNumber = 1; offset < file.size; offset += CHUNK_SIZE, partNumber += 1) {
+  const end = Math.min(offset + CHUNK_SIZE, file.size);
+  const chunk = file.slice(offset, end);
+  const formData = new FormData();
+  formData.append('key', uploadSession.key);
+  formData.append('uploadId', uploadSession.uploadId);
+  formData.append('partNumber', String(partNumber));
+  formData.append('chunk', chunk, file.name);
+
+  const response = await uploadPartWithRetry(formData, {
+    onUploadProgress: (event) => {
+      const percent = ((uploadedBytes + event.loaded) / file.size) * 100;
+      onProgress(Math.min(99, Math.max(1, percent)));
+    }
+  });
+}
+~~~
+
+#### Backend complete multipart and create job
+
+~~~js
+const uploaded = await awsS3Service.completeVideoMultipartUpload({ key, uploadId, parts });
+
+const pendingEpisode = await episodeModel.createUploadEpisode({
+  movieId,
+  name: episodeName,
+  sourceUrl: uploaded.s3Uri,
+  uploadStatus: 'uploaded'
+});
+
+const job = await mediaConvertService.createHlsJob({
+  inputS3Uri: uploaded.s3Uri,
+  movieId,
+  episodeId: pendingEpisode.MaTap
+});
+~~~
+
+#### Why manual Sync is no longer required
+
+MediaConvert sends job state changes to EventBridge. Lambda <code>netflop-mediaconvert-notifier</code> receives the event and calls backend webhook <code>/api/uploads/mediaconvert/events</code>. The backend uses jobId/episodeId to update the episode status.
+
+#### Lambda notifier sample
+
+~~~js
+const response = await fetch(webhookUrl, {
+  method: 'POST',
+  headers: {
+    'content-type': 'application/json',
+    'x-netflop-event-secret': secret
+  },
+  body: JSON.stringify(event)
+});
+~~~
+
+{{% notice info %}}
+Screenshots needed: admin upload form, upload progress bar, S3 input file, MediaConvert job COMPLETE, Lambda log, episode table ready, and player playing the new episode.
+{{% /notice %}}
+<!-- NETFLOP_IMPLEMENTATION_END -->

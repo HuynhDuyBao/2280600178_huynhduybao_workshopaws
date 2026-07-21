@@ -79,3 +79,65 @@ The deployment should separate permissions by component:
 For production, avoid long-lived access keys and prefer IAM roles attached to EC2/Lambda/MediaConvert.
 <!-- NETFLOP_DETAIL_END -->
 
+<!-- NETFLOP_IMPLEMENTATION_START -->
+#### Required IAM roles
+
+Netflop should use IAM roles instead of hard-coded AWS access keys in environment files. The EC2 instance receives an instance role so the backend can access S3 and MediaConvert securely.
+
+#### EC2 backend role
+
+Minimum permissions:
+
+* Read and write objects in the S3 input and output buckets.
+* Create and complete S3 multipart uploads.
+* Call MediaConvert CreateJob and GetJob.
+* Pass the MediaConvert service role.
+* Write CloudWatch logs if an agent or SDK logging is enabled.
+
+#### Short policy example
+
+~~~json
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": ["s3:GetObject", "s3:PutObject", "s3:DeleteObject", "s3:ListBucket"],
+      "Resource": [
+        "arn:aws:s3:::netflop-input-source",
+        "arn:aws:s3:::netflop-input-source/*",
+        "arn:aws:s3:::netflop-output-source",
+        "arn:aws:s3:::netflop-output-source/*"
+      ]
+    },
+    {
+      "Effect": "Allow",
+      "Action": ["mediaconvert:CreateJob", "mediaconvert:GetJob"],
+      "Resource": "*"
+    },
+    {
+      "Effect": "Allow",
+      "Action": "iam:PassRole",
+      "Resource": "arn:aws:iam::<account-id>:role/<mediaconvert-role-name>"
+    }
+  ]
+}
+~~~
+
+#### MediaConvert service role
+
+MediaConvert needs a separate service role that can read from the S3 input bucket and write to the S3 output bucket. The trust policy must allow <code>mediaconvert.amazonaws.com</code> to assume the role.
+
+#### Verification commands
+
+~~~bash
+aws sts get-caller-identity
+aws s3 ls s3://netflop-input-source
+aws s3 ls s3://netflop-output-source
+aws mediaconvert describe-endpoints --region ap-southeast-1
+~~~
+
+{{% notice info %}}
+Screenshots needed: EC2 instance profile, IAM role policy, MediaConvert role trust relationship, and AWS CLI permission checks.
+{{% /notice %}}
+<!-- NETFLOP_IMPLEMENTATION_END -->

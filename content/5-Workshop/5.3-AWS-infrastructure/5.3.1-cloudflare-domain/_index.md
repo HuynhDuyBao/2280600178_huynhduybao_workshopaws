@@ -20,9 +20,7 @@ User -> Cloudflare DNS + HTTPS -> netflop.win -> EC2 public IP -> Nginx
 4. Check proxy/HTTPS status.
 5. Open `https://netflop.win`.
 
-{{% notice info %}}
-Image needed: Cloudflare DNS record and successful website access through domain.
-{{% /notice %}}
+
 
 ![](/2280600178_huynhduybao_workshopaws/images/5-Workshop/5.3-AWS-infrastructure/5.3.1-cloudflare-domain/DNSrecord.png)
 
@@ -55,3 +53,38 @@ Expected result:
 * HTTPS is active through Cloudflare.
 * Browser can open the Netflop website.
 <!-- NETFLOP_DETAIL_END -->
+
+<!-- NETFLOP_IMPLEMENTATION_START -->
+#### Configure netflop.win
+
+The website uses Cloudflare to manage DNS and HTTPS for <code>netflop.win</code>. Without an Application Load Balancer, DNS records point directly to the EC2 public IP or Elastic IP.
+
+#### Implementation steps
+
+1. Open Cloudflare -> DNS.
+2. Create an <code>A</code> record for <code>@</code> pointing to the EC2 IP.
+3. Create a <code>CNAME</code> record for <code>www</code> pointing to <code>netflop.win</code>.
+4. Enable proxy if Cloudflare SSL/CDN is used.
+5. In SSL/TLS, choose the correct mode. If EC2 does not have an origin certificate, Flexible can work temporarily. With a valid origin certificate, use Full or Full strict.
+6. Update OAuth/Cognito callback URLs to <code>https://netflop.win/auth/callback</code>.
+
+#### DNS and HTTPS checks
+
+~~~bash
+nslookup netflop.win
+curl -I https://netflop.win
+curl -I https://netflop.win/api/health
+~~~
+
+#### Common issues
+
+| Issue | Cause | Fix |
+| --- | --- | --- |
+| Mixed content | HTTPS page loads HTTP or localhost media/API | Use HTTPS production domain for API and media URLs |
+| OAuth redirect mismatch | Google/Cognito callback still points to localhost or EC2 DNS | Add <code>https://netflop.win/auth/callback</code> |
+| API timeout | Nginx/PM2/backend or security group problem | Check PM2, Nginx, and inbound ports 80/443 |
+
+{{% notice info %}}
+Screenshots needed: Cloudflare DNS records, SSL/TLS mode, website through https://netflop.win, and OAuth callback using the domain.
+{{% /notice %}}
+<!-- NETFLOP_IMPLEMENTATION_END -->

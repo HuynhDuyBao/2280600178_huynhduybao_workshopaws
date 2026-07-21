@@ -94,3 +94,29 @@ For each later workshop section, explain three points:
 
 <!-- NETFLOP_DETAIL_END -->
 
+<!-- NETFLOP_IMPLEMENTATION_START -->
+#### AWS service map by website feature
+
+| Netflop feature | AWS service | Reason |
+| --- | --- | --- |
+| Host frontend/backend | EC2 | Runs Node.js, Nginx, and PM2 on one server |
+| Movie/user database | RDS MySQL | Managed database with backups and security groups |
+| Store source videos | S3 input bucket | Durable storage for large MP4/MKV files |
+| Store HLS output | S3 output bucket | Stores manifests, segments, subtitles, and media assets |
+| Transcode video | MediaConvert | Generates adaptive HLS renditions from 360p to 1080p |
+| Update job status | EventBridge + Lambda | Notifies the backend when a job is COMPLETE or ERROR |
+| Fast video delivery | CloudFront | CDN for HLS manifests and segments |
+| Protect streams | CloudFront signed cookies | Limits HLS access by time and policy |
+| Operations | CloudWatch + SNS | Metrics, logs, alarms, and email alerts |
+
+#### Services not required in the current main architecture
+
+API Gateway, Application Load Balancer, AWS WAF, and Route 53 are not mandatory in the current deployment. The website currently uses Nginx reverse proxy on EC2 and Cloudflare for DNS/HTTPS. These services can be added later when the system needs multiple EC2 instances, managed rate limiting, or AWS-managed DNS.
+
+#### How to prove the service map in the report
+
+1. Capture a screenshot of each real AWS resource.
+2. Include resource names such as <code>netflop-db</code>, <code>netflop-input-source</code>, and <code>netflop-output-source</code>.
+3. Explain which website feature depends on each resource.
+4. Add the related code samples in the following workshop sections.
+<!-- NETFLOP_IMPLEMENTATION_END -->

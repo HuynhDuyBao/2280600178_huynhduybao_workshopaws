@@ -112,3 +112,53 @@ curl https://netflop.win/api/catalog/genres
 
 If the API returns lists of movies and genres, the backend is reading data from RDS successfully.
 <!-- NETFLOP_DETAIL_END -->
+
+<!-- NETFLOP_IMPLEMENTATION_START -->
+#### Create RDS MySQL for Netflop
+
+The production database uses RDS MySQL. The database name is <code>web_xem_phim_final</code>. It stores users, movies, episodes, subtitles, watch history, comments, and ratings.
+
+#### RDS setup and security steps
+
+1. Select MySQL engine.
+2. Choose a small instance for demo, for example <code>db.t4g.micro</code>.
+3. Set DB identifier to <code>netflop-db</code>.
+4. Create database <code>web_xem_phim_final</code>.
+5. Select the same VPC as EC2.
+6. Configure the RDS security group to allow port 3306 only from the EC2 security group.
+7. Do not open MySQL port 3306 to all public IPs in production.
+
+#### Import local database dump into RDS
+
+~~~bash
+mysql -h netflop-db.xxxxxx.ap-southeast-1.rds.amazonaws.com \
+  -u admin -p web_xem_phim_final < database/web_xem_phim_final_dump.sql
+~~~
+
+#### Backend RDS connection sample
+
+~~~js
+const pool = mysql.createPool({
+  host: env.db.host,
+  port: env.db.port,
+  database: env.db.database,
+  user: env.db.user,
+  password: env.db.password,
+  waitForConnections: true,
+  connectionLimit: env.db.connectionLimit,
+  charset: 'utf8mb4',
+  namedPlaceholders: true
+});
+~~~
+
+#### Post-import checks
+
+1. Backend starts without database errors.
+2. Homepage returns movie data.
+3. Sign in and sign up work.
+4. Admin can see movies and episodes.
+
+{{% notice info %}}
+Screenshots needed: RDS available, RDS endpoint, security group inbound from EC2 only, successful import, and API movie response.
+{{% /notice %}}
+<!-- NETFLOP_IMPLEMENTATION_END -->

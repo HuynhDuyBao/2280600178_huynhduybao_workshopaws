@@ -123,3 +123,58 @@ npm --prefix backend start
 Nếu backend cần kết nối RDS thật khi chạy local, cần mở security group tạm thời cho IP cá nhân hoặc kiểm tra trực tiếp trên EC2 để tránh mở database quá rộng.
 
 <!-- NETFLOP_DETAIL_END -->
+
+<!-- NETFLOP_IMPLEMENTATION_START -->
+#### Nhóm biến môi trường cần cấu hình
+
+File env production nên chia thành từng nhóm để dễ kiểm tra:
+
+* Server: port, node env, CORS origin.
+* Database: host RDS, database, user, password.
+* JWT/session: secret, thời hạn token.
+* AWS media: region, S3 buckets, MediaConvert role, endpoint, CloudFront domain.
+* Stream security: CloudFront key pair id, private key path/base64, signed cookie TTL.
+* OAuth/Cognito: client id, client secret, redirect URI.
+
+#### Mẫu env production
+
+~~~env
+NODE_ENV=production
+PORT=5000
+CORS_ORIGIN=https://netflop.win
+
+DB_HOST=netflop-db.xxxxxx.ap-southeast-1.rds.amazonaws.com
+DB_PORT=3306
+DB_NAME=web_xem_phim_final
+DB_USER=admin
+DB_PASSWORD=<khong-ghi-mat-khau-vao-bao-cao>
+
+AWS_REGION=ap-southeast-1
+AWS_S3_INPUT_BUCKET=netflop-input-source
+AWS_S3_OUTPUT_BUCKET=netflop-output-source
+AWS_CLOUDFRONT_DOMAIN=https://dxxxxxxxxxxxxx.cloudfront.net
+AWS_MEDIACONVERT_ENDPOINT=https://mediaconvert.ap-southeast-1.amazonaws.com
+AWS_MEDIACONVERT_ROLE_ARN=arn:aws:iam::<account-id>:role/<mediaconvert-role>
+
+APP_URL=https://netflop.win
+GOOGLE_REDIRECT_URI=https://netflop.win/auth/callback
+AWS_COGNITO_REDIRECT_URI=https://netflop.win/auth/callback
+~~~
+
+#### Cách áp dụng env trên EC2
+
+1. Upload hoặc tạo file <code>/home/ubuntu/netflop/backend/.env</code>.
+2. Không commit file env lên Git.
+3. Restart backend bằng PM2.
+4. Kiểm tra API và log.
+
+~~~bash
+pm2 restart netflop-api --update-env
+pm2 logs netflop-api
+curl -I https://netflop.win/api/health
+~~~
+
+{{% notice warning %}}
+Trong báo cáo chỉ đưa biến mẫu. Không chụp hoặc ghi access key, database password, client secret, JWT secret và CloudFront private key.
+{{% /notice %}}
+<!-- NETFLOP_IMPLEMENTATION_END -->

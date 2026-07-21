@@ -65,3 +65,67 @@ Các đoạn code mẫu trong chương này được rút gọn từ source Netf
 | Phụ đề | S3, Lambda, WebVTT | SRT được chuyển sang VTT và hiển thị trên player |
 | Theo dõi hệ thống | CloudWatch, SNS | Alarm và log hoạt động |
 <!-- NETFLOP_DETAIL_END -->
+
+<!-- NETFLOP_IMPLEMENTATION_START -->
+#### Bổ sung phạm vi triển khai thực tế
+
+Phần workshop này mô tả lại quá trình triển khai website Netflop từ môi trường local lên AWS. Nội dung được viết theo hướng có thể thực hành lại, gồm các bước cấu hình hạ tầng, triển khai ứng dụng, xử lý video, bảo vệ stream, theo dõi vận hành và dọn dẹp tài nguyên.
+
+Các đoạn code minh họa được rút gọn từ project Netflop hiện tại. Khi đưa vào báo cáo, chỉ trích những đoạn thể hiện logic chính, không đưa mật khẩu database, access key, private key CloudFront, JWT secret hoặc OAuth client secret.
+
+#### Cách trình bày mỗi chức năng
+
+1. Nêu mục tiêu chức năng.
+2. Nêu dịch vụ AWS hoặc thành phần ứng dụng liên quan.
+3. Mô tả các bước thực hiện trên console/CLI.
+4. Mô tả luồng xử lý trong source code.
+5. Đưa code mẫu ngắn từ project.
+6. Ghi kết quả kiểm thử và ảnh minh họa cần chụp.
+
+#### Chức năng chính trong workshop
+
+| Nhóm | Chức năng triển khai | Bằng chứng cần có |
+| --- | --- | --- |
+| Hạ tầng | EC2, Nginx, PM2, RDS, Security Group | Web truy cập được, API health check thành công |
+| Lưu trữ media | S3 input/output, CloudFront | File gốc ở input bucket, HLS ở output bucket |
+| Xử lý video | MediaConvert, EventBridge, Lambda notifier | Job COMPLETE và trạng thái tập phim tự cập nhật |
+| Phụ đề | Upload VTT/SRT, Lambda chuyển SRT sang VTT | Track phụ đề hiển thị trong player |
+| Bảo mật stream | CloudFront signed cookies | HLS phát qua CloudFront, cookie có TTL |
+| Vận hành | CloudWatch, SNS, Cost Explorer | Có alarm, log, dashboard hoặc ảnh chi phí |
+
+#### Demo stream
+
+<div class="netflop-demo-player">
+  <video id="netflop-demo-video-vi" controls playsinline preload="metadata" style="width:100%;max-width:960px;background:#000;border-radius:8px;"></video>
+  <p id="netflop-demo-status-vi">
+    <a href="https://customer-mq3bsojkqgoa0nyg.cloudflarestream.com/8bc4e084d7f19b8303da087366e0fe91/manifest/video.m3u8">Mở HLS demo stream</a>
+  </p>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/hls.js@1/dist/hls.min.js"></script>
+<script>
+(function () {
+  const source = "https://customer-mq3bsojkqgoa0nyg.cloudflarestream.com/8bc4e084d7f19b8303da087366e0fe91/manifest/video.m3u8";
+  const video = document.getElementById("netflop-demo-video-vi");
+  const status = document.getElementById("netflop-demo-status-vi");
+  if (!video) return;
+
+  if (video.canPlayType("application/vnd.apple.mpegurl")) {
+    video.src = source;
+    return;
+  }
+
+  if (window.Hls && window.Hls.isSupported()) {
+    const hls = new Hls();
+    hls.loadSource(source);
+    hls.attachMedia(video);
+    hls.on(Hls.Events.ERROR, function () {
+      if (status) status.textContent = "Không tải được HLS demo stream trên trình duyệt này.";
+    });
+    return;
+  }
+
+  if (status) status.textContent = "Trình duyệt này không hỗ trợ phát HLS.";
+})();
+</script>
+<!-- NETFLOP_IMPLEMENTATION_END -->

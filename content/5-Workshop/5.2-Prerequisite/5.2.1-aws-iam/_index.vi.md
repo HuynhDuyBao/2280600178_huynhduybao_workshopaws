@@ -87,3 +87,66 @@ Policy dưới đây là ví dụ quyền S3 tối thiểu cho bucket input/outp
 4. Chạy thử upload file nhỏ lên S3 để xác nhận quyền hoạt động.
 
 <!-- NETFLOP_DETAIL_END -->
+
+<!-- NETFLOP_IMPLEMENTATION_START -->
+#### IAM Role cần có trong hệ thống
+
+Netflop nên dùng IAM Role thay vì hard-code AWS access key trong file env. EC2 được gắn role để backend có quyền thao tác với S3, MediaConvert, CloudFront signed key cấu hình bằng biến môi trường và Lambda/EventBridge.
+
+#### Role cho EC2 backend
+
+Các quyền tối thiểu:
+
+* Đọc/ghi S3 input bucket và output bucket.
+* Tạo multipart upload lên S3.
+* Gọi MediaConvert CreateJob/GetJob.
+* Pass role cho MediaConvert.
+* Ghi log CloudWatch nếu dùng agent hoặc SDK logging.
+
+#### Policy mẫu rút gọn
+
+~~~json
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": ["s3:GetObject", "s3:PutObject", "s3:DeleteObject", "s3:ListBucket"],
+      "Resource": [
+        "arn:aws:s3:::netflop-input-source",
+        "arn:aws:s3:::netflop-input-source/*",
+        "arn:aws:s3:::netflop-output-source",
+        "arn:aws:s3:::netflop-output-source/*"
+      ]
+    },
+    {
+      "Effect": "Allow",
+      "Action": ["mediaconvert:CreateJob", "mediaconvert:GetJob"],
+      "Resource": "*"
+    },
+    {
+      "Effect": "Allow",
+      "Action": "iam:PassRole",
+      "Resource": "arn:aws:iam::<account-id>:role/<mediaconvert-role-name>"
+    }
+  ]
+}
+~~~
+
+#### Role cho MediaConvert
+
+MediaConvert cần một service role riêng có quyền đọc S3 input và ghi S3 output. Trust policy của role này phải cho phép service <code>mediaconvert.amazonaws.com</code> assume role.
+
+#### Cách kiểm tra
+
+~~~bash
+aws sts get-caller-identity
+aws s3 ls s3://netflop-input-source
+aws s3 ls s3://netflop-output-source
+aws mediaconvert describe-endpoints --region ap-southeast-1
+~~~
+
+{{% notice info %}}
+Cần thêm ảnh: EC2 instance profile, IAM role policy, MediaConvert role trust relationship và kết quả AWS CLI kiểm tra quyền.
+{{% /notice %}}
+<!-- NETFLOP_IMPLEMENTATION_END -->

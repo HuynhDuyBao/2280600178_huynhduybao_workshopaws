@@ -124,3 +124,67 @@ const hls = new Hls({
 });
 ~~~
 <!-- NETFLOP_DETAIL_END -->
+
+<!-- NETFLOP_IMPLEMENTATION_START -->
+#### Mục tiêu CloudFront
+
+CloudFront được đặt trước S3 output bucket để người dùng xem HLS nhanh hơn và ổn định hơn. Với stream cần bảo vệ, backend cấp signed cookies trong một khoảng thời gian ngắn để player tải được manifest và segment.
+
+#### Luồng signed cookies
+
+1. Player chuẩn bị phát HLS.
+2. Frontend gọi <code>/api/stream/session</code> với source URL.
+3. Backend tạo policy giới hạn resource HLS và thời gian hết hạn.
+4. Backend ký policy bằng CloudFront private key.
+5. Browser nhận <code>CloudFront-Policy</code>, <code>CloudFront-Signature</code>, <code>CloudFront-Key-Pair-Id</code>.
+6. Player phát CloudFront URL và gửi cookie kèm request.
+
+#### Code backend cấp stream session
+
+~~~js
+async function createStreamSession(req, res, next) {
+  const sourceUrl = req.body?.sourceUrl || req.query?.sourceUrl;
+  const signedSession = cloudFrontSignedCookieService.buildSignedCookies(sourceUrl);
+
+  cloudFrontSignedCookieService.setSignedCookies(res, signedSession);
+
+  res.json({
+    success: true,
+    data: {
+      enabled: signedSession.enabled,
+      playbackUrl: signedSession.playbackUrl,
+      expiresAt: signedSession.expiresAt || null
+    }
+  });
+}
+~~~
+
+#### Code tạo cookie
+
+~~~js
+return {
+  enabled: true,
+  playbackUrl,
+  expiresAt,
+  cookies: {
+    'CloudFront-Policy': toCloudFrontBase64(policy),
+    'CloudFront-Signature': signPolicy(policy),
+    'CloudFront-Key-Pair-Id': awsConfig.cloudFrontKeyPairId
+  }
+};
+~~~
+
+#### Code player gửi credentials khi cần
+
+~~~js
+const useCredentialedPlayback = shouldUseCredentialedPlayback(mediaUrl, signedPlaybackUrl);
+
+const hls = new Hls({
+  xhrSetup: (xhr) => {
+    xhr.withCredentials = useCredentialedPlayback;
+  }
+});
+~~~
+
+
+<!-- NETFLOP_IMPLEMENTATION_END -->

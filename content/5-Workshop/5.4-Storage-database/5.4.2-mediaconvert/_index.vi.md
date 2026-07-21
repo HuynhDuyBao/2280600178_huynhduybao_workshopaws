@@ -137,3 +137,71 @@ movies/{movieId}/episodes/{episodeId}/hls/index.m3u8
 movies/{movieId}/episodes/{episodeId}/hls/*.ts
 ~~~
 <!-- NETFLOP_DETAIL_END -->
+
+<!-- NETFLOP_IMPLEMENTATION_START -->
+#### Các bước tạo MediaConvert job
+
+1. Backend nhận <code>inputS3Uri</code> sau khi upload video xong.
+2. Tạo <code>outputPrefix</code> theo movieId/episodeId.
+3. Gọi AWS SDK <code>CreateJobCommand</code>.
+4. Truyền MediaConvert role ARN.
+5. Khai báo output group Apple HLS.
+6. Tạo 4 rendition: 360p, 480p, 720p, 1080p.
+7. Lưu jobId và CloudFront URL vào tập phim.
+
+#### Code mẫu từ service MediaConvert
+
+~~~js
+const outputPrefix = 'movies/' + movieId + '/episodes/' + episodeId + '/hls/';
+const masterKey = outputPrefix + 'index.m3u8';
+
+const command = new CreateJobCommand({
+  Role: awsConfig.mediaConvertRoleArn,
+  UserMetadata: {
+    movieId: String(movieId),
+    episodeId: String(episodeId),
+    outputPrefix,
+    masterKey
+  },
+  Settings: {
+    Inputs: [{ FileInput: inputS3Uri }],
+    OutputGroups: [{
+      Name: 'Apple HLS',
+      OutputGroupSettings: {
+        Type: 'HLS_GROUP_SETTINGS',
+        HlsGroupSettings: {
+          Destination: 's3://' + awsConfig.s3OutputBucket + '/' + outputPrefix + 'index',
+          SegmentLength: 6,
+          OutputSelection: 'MANIFESTS_AND_SEGMENTS'
+        }
+      },
+      Outputs: [
+        createHlsOutput({ nameModifier: '_360p', width: 640, height: 360 }),
+        createHlsOutput({ nameModifier: '_480p', width: 854, height: 480 }),
+        createHlsOutput({ nameModifier: '_720p', width: 1280, height: 720 }),
+        createHlsOutput({ nameModifier: '_1080p', width: 1920, height: 1080 })
+      ]
+    }]
+  }
+});
+~~~
+
+#### Cập nhật database sau khi submit job
+
+~~~js
+const job = await mediaConvertService.createHlsJob({
+  inputS3Uri: uploaded.s3Uri,
+  movieId,
+  episodeId: pendingEpisode.MaTap
+});
+
+await episodeModel.updateUploadProcessing(pendingEpisode.MaTap, {
+  jobId: job.jobId,
+  hlsUrl: playbackUrls.hlsUrl,
+  cloudFrontUrl: playbackUrls.cloudFrontUrl,
+  outputKey: job.masterKey
+});
+~~~
+
+
+<!-- NETFLOP_IMPLEMENTATION_END -->

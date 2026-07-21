@@ -94,3 +94,49 @@ await pool.execute(
 5. Kiểm tra tài khoản B không thấy lịch sử của tài khoản A.
 6. Bấm Tiếp tục xem ở tài khoản A và xác nhận player nhảy đúng thời điểm đã lưu.
 <!-- NETFLOP_DETAIL_END -->
+
+<!-- NETFLOP_IMPLEMENTATION_START -->
+#### Kiểm thử người dùng
+
+Luồng user cần chứng minh website không chỉ hiển thị phim mà còn lưu trạng thái theo từng tài khoản:
+
+1. Đăng ký hoặc đăng nhập.
+2. Mở một phim có nhiều tập.
+3. Xem vài phút rồi thoát.
+4. Vào Hồ sơ cá nhân -> Tiếp tục xem hoặc Lịch sử xem.
+5. Đăng nhập tài khoản khác để kiểm tra dữ liệu không bị dùng chung.
+
+#### Code frontend lưu tiến trình xem
+
+~~~js
+const watchedSeconds = Math.max(0, Math.floor(Number(progress?.currentTime || 0)));
+
+movieApi.saveHistory(movie.id, {
+  episodeId: selectedEpisode?.id || null,
+  watchedSeconds
+}).catch(() => {});
+~~~
+
+#### Code backend lưu theo user
+
+~~~js
+await pool.execute(
+  'INSERT INTO lichsu (UserID, TenDN, MaPhim, MaTap, ThoiGianXem, ThoiGian) VALUES (:userId, :username, :movieId, :episodeId, :watchedSeconds, NOW()) ON DUPLICATE KEY UPDATE MaTap = VALUES(MaTap), ThoiGianXem = VALUES(ThoiGianXem), ThoiGian = VALUES(ThoiGian)',
+  {
+    userId: user.id,
+    username: user.ten_dang_nhap,
+    movieId,
+    episodeId,
+    watchedSeconds
+  }
+);
+~~~
+
+#### Kết quả mong đợi
+
+* Tài khoản A xem phim thì lịch sử chỉ hiện ở tài khoản A.
+* Tài khoản B không thấy tiếp tục xem của tài khoản A.
+* Khi bấm tiếp tục xem, player seek về thời điểm đã lưu.
+
+
+<!-- NETFLOP_IMPLEMENTATION_END -->

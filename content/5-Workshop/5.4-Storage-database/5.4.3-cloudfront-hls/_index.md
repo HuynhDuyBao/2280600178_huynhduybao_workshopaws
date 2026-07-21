@@ -117,3 +117,73 @@ const hls = new Hls({
 });
 ~~~
 <!-- NETFLOP_DETAIL_END -->
+
+<!-- NETFLOP_IMPLEMENTATION_START -->
+#### CloudFront purpose
+
+CloudFront is placed in front of the S3 output bucket so users can stream HLS faster and more reliably. When stream protection is required, the backend issues signed cookies with a short TTL so the player can request the HLS manifest and segments.
+
+#### Signed cookie flow
+
+1. The player prepares to play an HLS source.
+2. Frontend calls <code>/api/stream/session</code> with the source URL.
+3. Backend builds a policy that limits the HLS resource and expiration time.
+4. Backend signs the policy with the CloudFront private key.
+5. Browser receives <code>CloudFront-Policy</code>, <code>CloudFront-Signature</code>, and <code>CloudFront-Key-Pair-Id</code>.
+6. Player plays the CloudFront URL and sends the cookies with requests.
+
+#### Backend stream session code
+
+~~~js
+async function createStreamSession(req, res, next) {
+  const sourceUrl = req.body?.sourceUrl || req.query?.sourceUrl;
+  const signedSession = cloudFrontSignedCookieService.buildSignedCookies(sourceUrl);
+
+  cloudFrontSignedCookieService.setSignedCookies(res, signedSession);
+
+  res.json({
+    success: true,
+    data: {
+      enabled: signedSession.enabled,
+      playbackUrl: signedSession.playbackUrl,
+      expiresAt: signedSession.expiresAt || null
+    }
+  });
+}
+~~~
+
+#### Cookie creation sample
+
+~~~js
+return {
+  enabled: true,
+  playbackUrl,
+  expiresAt,
+  cookies: {
+    'CloudFront-Policy': toCloudFrontBase64(policy),
+    'CloudFront-Signature': signPolicy(policy),
+    'CloudFront-Key-Pair-Id': awsConfig.cloudFrontKeyPairId
+  }
+};
+~~~
+
+#### Player credentials sample
+
+~~~js
+const useCredentialedPlayback = shouldUseCredentialedPlayback(mediaUrl, signedPlaybackUrl);
+
+const hls = new Hls({
+  xhrSetup: (xhr) => {
+    xhr.withCredentials = useCredentialedPlayback;
+  }
+});
+~~~
+
+{{% notice warning %}}
+The player should not send credentials for non-signed public sources such as Cloudflare Stream, otherwise CORS can fail because wildcard origin is not valid with credentials.
+{{% /notice %}}
+
+{{% notice info %}}
+Screenshots needed: CloudFront distribution, behavior/cache policy, signed cookies in DevTools Application tab, and HLS requests returning 200.
+{{% /notice %}}
+<!-- NETFLOP_IMPLEMENTATION_END -->

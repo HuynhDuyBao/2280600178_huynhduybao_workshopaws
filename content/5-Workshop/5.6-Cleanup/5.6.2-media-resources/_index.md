@@ -26,9 +26,6 @@ pre: " <b> 5.6.2. </b> "
 5. Delete unused EventBridge rules.
 6. Review IAM roles and policies.
 
-{{% notice info %}}
-Image needed: S3 cleanup, CloudFront disabled/deleted, Lambda/EventBridge after cleanup.
-{{% /notice %}}
 
 <!-- NETFLOP_DETAIL_START -->
 
@@ -103,3 +100,37 @@ Use this table in the report after cleanup:
 | EventBridge MediaConvert rule | Deleted or kept | Record final status |
 
 <!-- NETFLOP_DETAIL_END -->
+
+<!-- NETFLOP_IMPLEMENTATION_START -->
+#### Clean up media resources
+
+S3 and CloudFront can create cost when many videos are stored or watched. Separate real data from test data before deleting anything.
+
+#### Check S3 usage
+
+~~~bash
+aws s3 ls s3://netflop-input-source --recursive --summarize
+aws s3 ls s3://netflop-output-source --recursive --summarize
+~~~
+
+#### Delete test prefixes
+
+~~~bash
+aws s3 rm s3://netflop-input-source/uploads/test/ --recursive
+aws s3 rm s3://netflop-output-source/movies/test/ --recursive
+~~~
+
+#### Recommended lifecycle rules
+
+* Delete incomplete multipart uploads after a few days.
+* Move rarely used source videos to a cheaper storage class if they must be retained.
+* Do not automatically delete HLS output for movies that are still public.
+
+#### CloudFront invalidation
+
+If HLS output is changed or deleted while CloudFront still caches it, create an invalidation:
+
+~~~bash
+aws cloudfront create-invalidation --distribution-id <distribution-id> --paths "/movies/*"
+~~~
+<!-- NETFLOP_IMPLEMENTATION_END -->

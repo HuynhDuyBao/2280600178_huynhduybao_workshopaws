@@ -72,3 +72,30 @@ Trong sơ đồ architecture, nên nhóm các dịch vụ thành 5 vùng:
 4. Media Pipeline: S3 input, MediaConvert, S3 output, CloudFront.
 5. Operations: Lambda, EventBridge, CloudWatch, SNS, Systems Manager.
 <!-- NETFLOP_DETAIL_END -->
+
+<!-- NETFLOP_IMPLEMENTATION_START -->
+#### Bản đồ dịch vụ theo chức năng website
+
+| Chức năng Netflop | Dịch vụ AWS dùng | Lý do sử dụng |
+| --- | --- | --- |
+| Host frontend/backend | EC2 | Dễ triển khai Node.js, Nginx và PM2 trên một server |
+| Database phim/người dùng | RDS MySQL | Managed database, backup và security group riêng |
+| Lưu video gốc | S3 input bucket | Lưu file MP4/MKV dung lượng lớn bền vững |
+| Lưu HLS output | S3 output bucket | Lưu manifest, segment và subtitle |
+| Chuyển đổi video | MediaConvert | Xuất HLS nhiều bitrate 360p-1080p |
+| Cập nhật trạng thái job | EventBridge + Lambda | Tự động báo backend khi job COMPLETE/ERROR |
+| Phát video nhanh | CloudFront | CDN cho HLS segment |
+| Bảo vệ stream | CloudFront signed cookies | Giới hạn thời gian truy cập HLS |
+| Giám sát | CloudWatch + SNS | Theo dõi CPU, lỗi API, dung lượng, cảnh báo email |
+
+#### Dịch vụ chưa dùng trong kiến trúc chính
+
+API Gateway, ALB, WAF và Route 53 chưa bắt buộc trong bản triển khai hiện tại. Website đang dùng Nginx reverse proxy trên EC2 và DNS/SSL qua Cloudflare. Các dịch vụ này có thể bổ sung ở giai đoạn mở rộng khi cần tách nhiều EC2, rate limit nâng cao hoặc quản lý domain hoàn toàn trong AWS.
+
+#### Cách chứng minh trong báo cáo
+
+1. Với mỗi dịch vụ, chụp ảnh resource thật trên AWS console.
+2. Ghi rõ tên resource đang dùng, ví dụ <code>netflop-db</code>, <code>netflop-input-source</code>, <code>netflop-output-source</code>.
+3. Nêu một chức năng website phụ thuộc vào resource đó.
+4. Đưa code backend/frontend liên quan ở các mục sau.
+<!-- NETFLOP_IMPLEMENTATION_END -->

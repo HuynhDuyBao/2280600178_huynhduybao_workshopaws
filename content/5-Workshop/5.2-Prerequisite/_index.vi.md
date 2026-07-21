@@ -49,3 +49,39 @@ npm --prefix frontend run build
 
 Nếu frontend build thành công và AWS CLI trả đúng account, có thể chuyển sang bước tạo hạ tầng.
 <!-- NETFLOP_DETAIL_END -->
+
+<!-- NETFLOP_IMPLEMENTATION_START -->
+#### Chuẩn bị trước khi triển khai
+
+Trước khi cấu hình AWS, cần chuẩn bị môi trường local và tài khoản cloud:
+
+1. AWS account có quyền tạo EC2, RDS, S3, CloudFront, MediaConvert, IAM, Lambda, EventBridge và CloudWatch.
+2. AWS CLI đã cấu hình region <code>ap-southeast-1</code> cho phần hạ tầng chính.
+3. Node.js 20+, npm, Git.
+4. Source code Netflop đã chạy được local.
+5. Database dump <code>web_xem_phim_final_dump.sql</code>.
+6. Domain <code>netflop.win</code> đã trỏ DNS về EC2.
+
+#### Lệnh kiểm tra local
+
+~~~bash
+node -v
+npm -v
+aws sts get-caller-identity
+aws configure get region
+~~~
+
+#### Kiểm tra project trước deploy
+
+~~~bash
+npm --prefix backend install
+npm --prefix frontend install
+npm --prefix frontend run build
+~~~
+
+Nếu build frontend thành công và backend kết nối được database local/RDS, có thể chuyển sang triển khai hạ tầng.
+
+{{% notice info %}}
+Cần thêm ảnh: kết quả <code>aws sts get-caller-identity</code>, phiên bản Node.js/npm và frontend build thành công.
+{{% /notice %}}
+<!-- NETFLOP_IMPLEMENTATION_END -->

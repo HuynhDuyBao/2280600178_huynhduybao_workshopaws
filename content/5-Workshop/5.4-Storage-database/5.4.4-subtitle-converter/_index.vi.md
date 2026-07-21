@@ -122,3 +122,70 @@ await s3.send(new PutObjectCommand({
 }));
 ~~~
 <!-- NETFLOP_DETAIL_END -->
+
+<!-- NETFLOP_IMPLEMENTATION_START -->
+#### Chức năng phụ đề
+
+Admin có thể thêm phụ đề cho từng tập phim bằng URL hoặc upload file. Website hỗ trợ <code>.vtt</code> trực tiếp và <code>.srt</code> bằng cách chuyển sang WebVTT.
+
+#### Luồng upload phụ đề
+
+1. Admin chọn tập phim.
+2. Nhập mã ngôn ngữ, ví dụ <code>vi</code>.
+3. Upload file <code>.vtt</code> hoặc <code>.srt</code>.
+4. Backend upload file lên S3.
+5. Nếu là SRT, backend tạo VTT trả ngay cho web và Lambda cũng có thể xử lý serverless khi object SRT vào input bucket.
+6. Backend lưu URL phụ đề vào database.
+7. Player nhận danh sách subtitles và hiển thị trong selector CC.
+
+#### Code backend xử lý SRT
+
+~~~js
+if (isSubtitle && extension === '.srt') {
+  const { inputKey, outputKey } = subtitleObjectKeys(body, req.file.originalname);
+  const uploadedSource = await awsS3Service.uploadSubtitleSource(req.file, {
+    inputKey,
+    outputBucket: awsConfig.s3OutputBucket,
+    outputKey,
+    metadata
+  });
+
+  const vttText = convertSrtBufferToVtt(req.file.buffer);
+  const uploadedVtt = await awsS3Service.uploadPublicObject({
+    key: outputKey,
+    body: Buffer.from(vttText, 'utf8'),
+    contentType: 'text/vtt; charset=utf-8'
+  });
+}
+~~~
+
+#### Code Lambda chuyển SRT sang VTT
+
+~~~js
+function srtToWebVtt(srtText) {
+  const body = String(srtText || '')
+    .replace(/^\uFEFF/, '')
+    .replace(/\r\n/g, '\n')
+    .replace(/\r/g, '\n')
+    .replace(/(\d{2}:\d{2}:\d{2}),(\d{3})\s*-->\s*(\d{2}:\d{2}:\d{2}),(\d{3})/g, '$1.$2 --> $3.$4');
+
+  return 'WEBVTT\n\n' + body + '\n';
+}
+~~~
+
+#### Code player nhận subtitle
+
+~~~js
+const tracks = subtitles
+  .filter((item) => item?.url)
+  .map((item) => ({
+    languageCode: item.languageCode,
+    label: item.label,
+    url: subtitleMediaUrl(item.url)
+  }));
+~~~
+
+{{% notice info %}}
+Cần thêm ảnh: giao diện admin upload phụ đề, file SRT ở S3 input, file VTT ở S3 output, Lambda invocation log và selector CC trong player.
+{{% /notice %}}
+<!-- NETFLOP_IMPLEMENTATION_END -->

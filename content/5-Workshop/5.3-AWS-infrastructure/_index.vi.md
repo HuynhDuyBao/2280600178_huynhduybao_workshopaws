@@ -43,3 +43,45 @@ curl -I https://netflop.win
 curl https://netflop.win/api/catalog/genres
 ~~~
 <!-- NETFLOP_DETAIL_END -->
+
+<!-- NETFLOP_IMPLEMENTATION_START -->
+#### Thứ tự tạo hạ tầng
+
+Thứ tự triển khai nên đi từ tài nguyên nền tảng đến tài nguyên phụ thuộc:
+
+1. Tạo S3 input/output bucket.
+2. Tạo IAM Role cho EC2 và MediaConvert.
+3. Tạo RDS MySQL và Security Group.
+4. Tạo EC2, gắn IAM Role, cài Node.js/Git/Nginx/PM2.
+5. Deploy backend/frontend.
+6. Cấu hình Cloudflare DNS trỏ về EC2.
+7. Tạo CloudFront distribution cho S3 output.
+8. Cấu hình EventBridge + Lambda cho MediaConvert.
+9. Tạo CloudWatch alarm và SNS.
+
+#### Luồng phụ thuộc
+
+~~~text
+RDS + S3 + IAM
+      |
+      v
+EC2 backend
+      |
+      v
+MediaConvert + CloudFront
+      |
+      v
+User player + Admin upload
+~~~
+
+#### Kiểm tra cuối mỗi bước
+
+| Bước | Cách kiểm tra |
+| --- | --- |
+| EC2 | <code>pm2 status</code>, <code>sudo systemctl status nginx</code> |
+| RDS | Backend gọi API trả dữ liệu phim |
+| S3 | Upload thử ảnh/video/phụ đề |
+| MediaConvert | Có job SUBMITTED/COMPLETE |
+| CloudFront | Mở URL HLS qua distribution |
+| CloudWatch | Alarm có trạng thái OK/ALARM |
+<!-- NETFLOP_IMPLEMENTATION_END -->

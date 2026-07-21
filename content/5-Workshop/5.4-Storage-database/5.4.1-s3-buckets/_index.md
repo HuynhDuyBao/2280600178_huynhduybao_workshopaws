@@ -114,3 +114,59 @@ async function createVideoMultipartUpload({ movieId, episodeName, originalName, 
 3. Open S3 -> `netflop-output-source`.
 4. Check HLS output, banners, avatars, and subtitles.
 <!-- NETFLOP_DETAIL_END -->
+
+<!-- NETFLOP_IMPLEMENTATION_START -->
+#### S3 bucket structure
+
+Netflop uses two buckets:
+
+* <code>netflop-input-source</code>: stores source videos and SRT source files.
+* <code>netflop-output-source</code>: stores HLS output, VTT subtitles, avatars, and episode banners depending on configuration.
+
+#### Suggested prefixes
+
+~~~text
+uploads/videos/{movieId}/{timestamp}-{filename}
+movies/{movieId}/episodes/{episodeId}/hls/index.m3u8
+movies/{movieId}/episodes/{episodeId}/hls/*.ts
+subtitle-input/episodes/{episodeId}/{lang}/{file}.srt
+subtitles/episodes/{episodeId}/{lang}/{file}.vtt
+avatars/users/{userId}/{file}
+episode-banners/{file}
+~~~
+
+#### PutObject sample
+
+~~~js
+await s3.send(new PutObjectCommand({
+  Bucket: bucket,
+  Key: key,
+  Body: file.buffer,
+  ContentType: file.mimetype || 'application/octet-stream',
+  Metadata: metadata
+}));
+~~~
+
+#### Multipart upload sample
+
+~~~js
+const part = await awsS3Service.uploadVideoPart({
+  key,
+  uploadId,
+  partNumber,
+  body: req.file.buffer
+});
+
+const uploaded = await awsS3Service.completeVideoMultipartUpload({
+  key,
+  uploadId,
+  parts
+});
+~~~
+
+#### Why multipart is required
+
+A 5GB movie upload in a single request can fail with <code>413 Request Entity Too Large</code> or timeout. Multipart upload splits the file into smaller parts, retries only failed parts, and allows the admin UI to show accurate progress.
+
+
+<!-- NETFLOP_IMPLEMENTATION_END -->

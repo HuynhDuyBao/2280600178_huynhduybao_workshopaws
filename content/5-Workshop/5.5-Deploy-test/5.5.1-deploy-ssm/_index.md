@@ -83,3 +83,49 @@ pm2 restart netflop-api --update-env
 pm2 logs netflop-api
 ~~~
 <!-- NETFLOP_DETAIL_END -->
+
+<!-- NETFLOP_IMPLEMENTATION_START -->
+#### Deploy application to EC2
+
+The application can be deployed through SSH or AWS Systems Manager Session Manager. The report should present a clear deployment sequence:
+
+1. Pull the latest source from Git.
+2. Install backend and frontend dependencies.
+3. Build the frontend.
+4. Copy the build output to the Nginx web root.
+5. Restart backend with PM2.
+6. Reload Nginx.
+7. Verify API and UI.
+
+#### Deployment commands
+
+~~~bash
+cd /home/ubuntu/netflop
+git pull origin feature/uploadaws
+
+cd backend
+npm install --omit=dev
+pm2 restart netflop-api --update-env
+
+cd ../frontend
+npm install
+npm run build
+sudo rsync -a --delete dist/ /var/www/netflop/
+sudo nginx -t
+sudo systemctl reload nginx
+~~~
+
+#### Verification after deployment
+
+~~~bash
+pm2 status
+pm2 logs netflop-api --lines 50
+sudo systemctl status nginx --no-pager
+curl -I https://netflop.win
+curl https://netflop.win/api/health
+~~~
+
+{{% notice info %}}
+Screenshots needed: successful deploy terminal, <code>pm2 status</code>, active Nginx, API health check, and website UI after deployment.
+{{% /notice %}}
+<!-- NETFLOP_IMPLEMENTATION_END -->

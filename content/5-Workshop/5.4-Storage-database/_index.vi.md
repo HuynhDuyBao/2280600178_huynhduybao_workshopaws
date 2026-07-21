@@ -49,3 +49,31 @@ Với file lớn, upload được chia thành nhiều part để tránh lỗi <c
 | POST <code>/api/uploads/videos/:id/sync</code> | Kiểm tra trạng thái thủ công nếu cần |
 | POST <code>/api/stream/session</code> | Cấp signed cookies cho CloudFront stream |
 <!-- NETFLOP_DETAIL_END -->
+
+<!-- NETFLOP_IMPLEMENTATION_START -->
+#### Nhóm storage và media pipeline
+
+Phần này là lõi của website xem phim. Backend không upload video lên thư mục local nữa, mà dùng S3 và MediaConvert để tạo nguồn phát HLS.
+
+#### Luồng media hoàn chỉnh
+
+1. Admin chọn file MP4/MKV ở giao diện quản trị.
+2. Frontend upload theo multipart để hỗ trợ file lớn.
+3. Backend nhận từng chunk và gửi vào S3 input bucket.
+4. Khi complete multipart, backend tạo bản ghi tập phim trạng thái <code>processing</code>.
+5. Backend gọi MediaConvert tạo HLS nhiều chất lượng.
+6. MediaConvert ghi output vào S3 output bucket.
+7. EventBridge kích hoạt Lambda báo backend khi job xong.
+8. Backend đổi trạng thái tập sang <code>ready</code>.
+9. Player lấy link CloudFront để phát.
+
+#### Metadata lưu trong database
+
+| Dữ liệu | Mục đích |
+| --- | --- |
+| S3 source URL | Truy vết file gốc |
+| MediaConvert job id | Đồng bộ trạng thái job |
+| HLS URL | Đường dẫn manifest trong S3 output |
+| CloudFront URL | Đường dẫn phát tối ưu cho user |
+| Upload status | processing/ready/failed |
+<!-- NETFLOP_IMPLEMENTATION_END -->

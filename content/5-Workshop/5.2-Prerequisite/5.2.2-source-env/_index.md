@@ -112,3 +112,58 @@ npm --prefix backend install
 npm --prefix backend start
 ~~~
 <!-- NETFLOP_DETAIL_END -->
+
+<!-- NETFLOP_IMPLEMENTATION_START -->
+#### Environment variable groups
+
+Production environment variables should be grouped so they are easy to verify:
+
+* Server: port, Node environment, CORS origin.
+* Database: RDS host, database name, user, password.
+* JWT/session: secret and token lifetime.
+* AWS media: region, S3 buckets, MediaConvert role, endpoint, CloudFront domain.
+* Stream security: CloudFront key pair id, private key path/base64, signed cookie TTL.
+* OAuth/Cognito: client id, client secret, redirect URI.
+
+#### Production env example
+
+~~~env
+NODE_ENV=production
+PORT=5000
+CORS_ORIGIN=https://netflop.win
+
+DB_HOST=netflop-db.xxxxxx.ap-southeast-1.rds.amazonaws.com
+DB_PORT=3306
+DB_NAME=web_xem_phim_final
+DB_USER=admin
+DB_PASSWORD=<do-not-put-the-real-password-in-the-report>
+
+AWS_REGION=ap-southeast-1
+AWS_S3_INPUT_BUCKET=netflop-input-source
+AWS_S3_OUTPUT_BUCKET=netflop-output-source
+AWS_CLOUDFRONT_DOMAIN=https://dxxxxxxxxxxxxx.cloudfront.net
+AWS_MEDIACONVERT_ENDPOINT=https://mediaconvert.ap-southeast-1.amazonaws.com
+AWS_MEDIACONVERT_ROLE_ARN=arn:aws:iam::<account-id>:role/<mediaconvert-role>
+
+APP_URL=https://netflop.win
+GOOGLE_REDIRECT_URI=https://netflop.win/auth/callback
+AWS_COGNITO_REDIRECT_URI=https://netflop.win/auth/callback
+~~~
+
+#### Apply env on EC2
+
+1. Create or upload <code>/home/ubuntu/netflop/backend/.env</code>.
+2. Do not commit this file to Git.
+3. Restart the backend with PM2.
+4. Check API and logs.
+
+~~~bash
+pm2 restart netflop-api --update-env
+pm2 logs netflop-api
+curl -I https://netflop.win/api/health
+~~~
+
+{{% notice warning %}}
+Only show placeholder values in the report. Do not expose access keys, database passwords, client secrets, JWT secrets, or CloudFront private keys.
+{{% /notice %}}
+<!-- NETFLOP_IMPLEMENTATION_END -->

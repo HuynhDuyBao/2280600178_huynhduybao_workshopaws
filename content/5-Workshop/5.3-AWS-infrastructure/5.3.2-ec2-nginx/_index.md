@@ -62,9 +62,7 @@ Minimum inbound ports for EC2:
 
 If using Systems Manager Session Manager, SSH access can be further restricted.
 
-{{% notice info %}}
-Add images: EC2 instance running, security group inbound rules, Nginx status, `pm2 status`, and API health check response.
-{{% /notice %}}
+
 
 ![ec2](/2280600178_huynhduybao_workshopaws/images/5-Workshop/5.3-AWS-infrastructure/5.3.2-ec2-nginx/ec2running.png)
 ![ec2s](/2280600178_huynhduybao_workshopaws/images/5-Workshop/5.3-AWS-infrastructure/5.3.2-ec2-nginx/security%20gr.png)
@@ -125,3 +123,77 @@ pm2 status
 pm2 logs netflop-api
 ~~~
 <!-- NETFLOP_DETAIL_END -->
+
+<!-- NETFLOP_IMPLEMENTATION_START -->
+#### EC2 role in the system
+
+EC2 hosts both the built frontend and the Node.js backend. Nginx serves static React files and reverse proxies API requests to the backend running locally.
+
+#### Install dependencies on EC2
+
+~~~bash
+sudo apt update
+sudo apt install -y nginx git
+curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+sudo apt install -y nodejs
+sudo npm install -g pm2
+~~~
+
+#### Nginx reverse proxy example
+
+~~~nginx
+server {
+  listen 80;
+  server_name netflop.win www.netflop.win;
+
+  root /var/www/netflop;
+  index index.html;
+
+  location /api/ {
+    proxy_pass http://127.0.0.1:5000/api/;
+    proxy_set_header Host $host;
+    proxy_set_header X-Forwarded-Proto $scheme;
+    proxy_set_header X-Real-IP $remote_addr;
+  }
+
+  location / {
+    try_files $uri $uri/ /index.html;
+  }
+}
+~~~
+
+#### Run backend with PM2
+
+~~~bash
+cd /home/ubuntu/netflop/backend
+npm install --omit=dev
+pm2 start src/server.js --name netflop-api
+pm2 save
+pm2 startup
+~~~
+
+#### Deploy frontend
+
+~~~bash
+cd /home/ubuntu/netflop/frontend
+npm install
+npm run build
+sudo rm -rf /var/www/netflop/*
+sudo cp -r dist/* /var/www/netflop/
+sudo systemctl reload nginx
+~~~
+
+#### Verification
+
+~~~bash
+sudo nginx -t
+sudo systemctl status nginx --no-pager
+pm2 status
+pm2 logs netflop-api
+curl -I http://127.0.0.1:5000/api/health
+~~~
+
+{{% notice info %}}
+Screenshots needed: EC2 instance running, inbound security group, <code>pm2 status</code>, <code>systemctl status nginx</code>, and API health check.
+{{% /notice %}}
+<!-- NETFLOP_IMPLEMENTATION_END -->

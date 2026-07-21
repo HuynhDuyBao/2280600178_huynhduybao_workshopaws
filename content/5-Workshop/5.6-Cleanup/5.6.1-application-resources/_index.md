@@ -36,9 +36,7 @@ Do not delete the production database until a backup exists. Before cleanup:
 * Security Groups are smaller and more secure.
 * The production database has a backup before any major change.
 
-{{% notice info %}}
-Image needed: EC2 instance list, EBS volumes, Elastic IPs, Security Group inbound rules, RDS snapshot, and disabled IAM access keys if unused.
-{{% /notice %}}
+
 
 <!-- NETFLOP_DETAIL_START -->
 #### How to clean up application resources
@@ -71,3 +69,35 @@ aws rds create-db-snapshot \
 
 Do not delete RDS until you have a snapshot or exported data you want to keep.
 <!-- NETFLOP_DETAIL_END -->
+
+<!-- NETFLOP_IMPLEMENTATION_START -->
+#### Clean up application resources
+
+If this is only a temporary break, stop local backend/frontend and optionally stop EC2. Terminate EC2 only when the demo environment is no longer needed.
+
+#### Commands on EC2
+
+~~~bash
+pm2 status
+pm2 stop netflop-api
+sudo systemctl stop nginx
+~~~
+
+#### Stop EC2 with CLI
+
+~~~bash
+aws ec2 stop-instances --instance-ids i-xxxxxxxxxxxxxxxxx --region ap-southeast-1
+~~~
+
+#### RDS backup
+
+Before deleting RDS, create a snapshot:
+
+~~~bash
+aws rds create-db-snapshot \
+  --db-instance-identifier netflop-db \
+  --db-snapshot-identifier netflop-db-before-cleanup
+~~~
+
+
+<!-- NETFLOP_IMPLEMENTATION_END -->

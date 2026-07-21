@@ -122,3 +122,70 @@ await s3.send(new PutObjectCommand({
 }));
 ~~~
 <!-- NETFLOP_DETAIL_END -->
+
+<!-- NETFLOP_IMPLEMENTATION_START -->
+#### Subtitle feature
+
+Administrators can add subtitles to each episode by URL or file upload. The website supports <code>.vtt</code> directly and supports <code>.srt</code> by converting it to WebVTT.
+
+#### Subtitle upload flow
+
+1. Admin selects an episode.
+2. Admin enters a language code, for example <code>vi</code>.
+3. Admin uploads a <code>.vtt</code> or <code>.srt</code> file.
+4. Backend uploads the file to S3.
+5. If the file is SRT, backend creates a VTT output immediately and Lambda can also process the SRT object serverlessly.
+6. Backend stores the subtitle URL in the database.
+7. The player receives subtitles and displays them in the CC selector.
+
+#### Backend SRT handling sample
+
+~~~js
+if (isSubtitle && extension === '.srt') {
+  const { inputKey, outputKey } = subtitleObjectKeys(body, req.file.originalname);
+  const uploadedSource = await awsS3Service.uploadSubtitleSource(req.file, {
+    inputKey,
+    outputBucket: awsConfig.s3OutputBucket,
+    outputKey,
+    metadata
+  });
+
+  const vttText = convertSrtBufferToVtt(req.file.buffer);
+  const uploadedVtt = await awsS3Service.uploadPublicObject({
+    key: outputKey,
+    body: Buffer.from(vttText, 'utf8'),
+    contentType: 'text/vtt; charset=utf-8'
+  });
+}
+~~~
+
+#### Lambda SRT to VTT sample
+
+~~~js
+function srtToWebVtt(srtText) {
+  const body = String(srtText || '')
+    .replace(/^\uFEFF/, '')
+    .replace(/\r\n/g, '\n')
+    .replace(/\r/g, '\n')
+    .replace(/(\d{2}:\d{2}:\d{2}),(\d{3})\s*-->\s*(\d{2}:\d{2}:\d{2}),(\d{3})/g, '$1.$2 --> $3.$4');
+
+  return 'WEBVTT\n\n' + body + '\n';
+}
+~~~
+
+#### Player subtitle mapping
+
+~~~js
+const tracks = subtitles
+  .filter((item) => item?.url)
+  .map((item) => ({
+    languageCode: item.languageCode,
+    label: item.label,
+    url: subtitleMediaUrl(item.url)
+  }));
+~~~
+
+{{% notice info %}}
+Screenshots needed: admin subtitle upload UI, SRT file in S3 input, VTT file in S3 output, Lambda invocation log, and CC selector in the player.
+{{% /notice %}}
+<!-- NETFLOP_IMPLEMENTATION_END -->

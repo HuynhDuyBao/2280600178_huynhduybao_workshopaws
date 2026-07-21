@@ -56,9 +56,6 @@ Các tài nguyên cần kiểm tra:
 * Không còn automation test chạy ngoài ý muốn.
 * CloudFront/Lambda/EventBridge chỉ giữ lại phần đang dùng thật.
 
-{{% notice info %}}
-Cần thêm ảnh: S3 storage/object list, MediaConvert job history, CloudFront distribution, Lambda functions, EventBridge rule và CloudWatch log groups.
-{{% /notice %}}
 
 <!-- NETFLOP_DETAIL_START -->
 #### Cách cleanup tài nguyên media
@@ -92,3 +89,37 @@ Nếu không dùng pipeline nữa:
 
 Với website production, chỉ nên giữ lại hai Lambda đang dùng: MediaConvert notifier và subtitle converter.
 <!-- NETFLOP_DETAIL_END -->
+
+<!-- NETFLOP_IMPLEMENTATION_START -->
+#### Dọn dẹp media resources
+
+S3 và CloudFront là nhóm dễ phát sinh chi phí khi lưu nhiều phim hoặc có nhiều lượt xem. Cần phân biệt dữ liệu thật và dữ liệu test.
+
+#### Kiểm tra dung lượng S3
+
+~~~bash
+aws s3 ls s3://netflop-input-source --recursive --summarize
+aws s3 ls s3://netflop-output-source --recursive --summarize
+~~~
+
+#### Xóa dữ liệu test theo prefix
+
+~~~bash
+aws s3 rm s3://netflop-input-source/uploads/test/ --recursive
+aws s3 rm s3://netflop-output-source/movies/test/ --recursive
+~~~
+
+#### Lifecycle policy nên dùng
+
+* Xóa multipart upload chưa hoàn tất sau vài ngày.
+* Chuyển file video gốc ít dùng sang storage class rẻ hơn nếu cần giữ lại.
+* Không tự động xóa HLS output của phim đang public.
+
+#### CloudFront
+
+Nếu đổi/xóa HLS output mà CDN vẫn cache, tạo invalidation:
+
+~~~bash
+aws cloudfront create-invalidation --distribution-id <distribution-id> --paths "/movies/*"
+~~~
+<!-- NETFLOP_IMPLEMENTATION_END -->

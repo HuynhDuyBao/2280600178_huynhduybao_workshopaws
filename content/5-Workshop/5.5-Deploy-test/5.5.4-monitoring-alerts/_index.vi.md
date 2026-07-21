@@ -89,3 +89,55 @@ aws sns list-topics --region ap-southeast-1
 
 Nếu tất cả alarm ở trạng thái OK, hệ thống đang hoạt động bình thường tại thời điểm kiểm tra. Nếu có alarm ALARM, cần ghi rõ nguyên nhân và hướng xử lý.
 <!-- NETFLOP_DETAIL_END -->
+
+<!-- NETFLOP_IMPLEMENTATION_START -->
+#### Mục tiêu monitoring
+
+Monitoring giúp phát hiện lỗi sau deploy: EC2 quá tải, backend chết, RDS tăng CPU, S3/CloudFront phát sinh chi phí hoặc MediaConvert job lỗi.
+
+#### Thành phần nên theo dõi
+
+| Thành phần | Metric/log cần theo dõi |
+| --- | --- |
+| EC2 | CPUUtilization, NetworkIn/Out, StatusCheckFailed |
+| PM2/backend | log lỗi, API 500, API health check |
+| Nginx | access log, error log |
+| RDS | CPUUtilization, FreeStorageSpace, DatabaseConnections |
+| S3 | bucket size, request count |
+| CloudFront | 4xx/5xx error rate, data transfer |
+| Lambda | Errors, Duration, Invocations |
+| MediaConvert | Job ERROR/CANCELED |
+
+#### Tạo SNS topic nhận cảnh báo
+
+~~~bash
+aws sns create-topic --name netflop-alerts
+aws sns subscribe --topic-arn arn:aws:sns:ap-southeast-1:<account-id>:netflop-alerts --protocol email --notification-endpoint <email>
+~~~
+
+#### Alarm EC2 CPU mẫu
+
+~~~bash
+aws cloudwatch put-metric-alarm \
+  --alarm-name netflop-ec2-high-cpu \
+  --metric-name CPUUtilization \
+  --namespace AWS/EC2 \
+  --statistic Average \
+  --period 300 \
+  --threshold 80 \
+  --comparison-operator GreaterThanThreshold \
+  --evaluation-periods 2 \
+  --dimensions Name=InstanceId,Value=i-xxxxxxxxxxxxxxxxx
+~~~
+
+#### Cách kiểm tra
+
+1. Vào CloudWatch -> Alarms.
+2. Kiểm tra alarm trạng thái OK.
+3. Vào Log groups nếu có cấu hình CloudWatch Agent.
+4. Kiểm tra email đã confirm SNS subscription.
+
+{{% notice info %}}
+Cần thêm ảnh: CloudWatch dashboard/alarm, SNS subscription confirmed, EC2 metric, RDS metric và Lambda log.
+{{% /notice %}}
+<!-- NETFLOP_IMPLEMENTATION_END -->

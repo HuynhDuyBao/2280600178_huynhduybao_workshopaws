@@ -79,3 +79,45 @@ After cleanup, the main remaining cost risks are EC2/RDS if they are still runni
 ~~~
 
 <!-- NETFLOP_DETAIL_END -->
+
+<!-- NETFLOP_IMPLEMENTATION_START -->
+#### Check cost after the workshop
+
+Main cost sources:
+
+* EC2 running continuously.
+* RDS instance and backup storage.
+* S3 source videos and HLS outputs.
+* MediaConvert charged by transcoding duration and output type.
+* CloudFront data transfer when users watch videos.
+* CloudWatch logs, metrics, and alarms.
+
+#### Cost Explorer CLI example
+
+~~~bash
+aws ce get-cost-and-usage \
+  --time-period Start=2026-07-01,End=2026-07-31 \
+  --granularity MONTHLY \
+  --metrics UnblendedCost \
+  --group-by Type=DIMENSION,Key=SERVICE
+~~~
+
+#### Estimating cost for large movie uploads
+
+If 5 movies are uploaded and each source file is about 5GB, the cost mainly increases in these areas:
+
+1. S3 input: about 25GB of source videos.
+2. S3 output: HLS multi-bitrate output can be close to or larger than the source size depending on settings.
+3. MediaConvert: charged by media duration and output resolution.
+4. CloudFront: charged by viewer traffic and segment downloads.
+
+#### Report table example
+
+| Cost group | Cause | Optimization |
+| --- | --- | --- |
+| S3 | Source videos and HLS output | Delete test files, use lifecycle rules |
+| MediaConvert | Multi-quality transcoding | Output only needed qualities |
+| CloudFront | Video streaming traffic | Cache correctly, use CDN instead of EC2 |
+| RDS | Database running 24/7 | Use small instance during demo |
+| EC2 | Server running 24/7 | Stop when demo is not active |
+<!-- NETFLOP_IMPLEMENTATION_END -->

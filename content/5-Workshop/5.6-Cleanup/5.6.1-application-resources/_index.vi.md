@@ -71,3 +71,35 @@ aws rds create-db-snapshot \
 
 Không xóa RDS nếu chưa có snapshot hoặc chưa export dữ liệu cần giữ.
 <!-- NETFLOP_DETAIL_END -->
+
+<!-- NETFLOP_IMPLEMENTATION_START -->
+#### Dọn dẹp tài nguyên application
+
+Nếu chỉ nghỉ tạm thời, nên stop backend/frontend local và có thể stop EC2. Nếu môi trường demo đã kết thúc, mới terminate EC2.
+
+#### Lệnh trên EC2
+
+~~~bash
+pm2 status
+pm2 stop netflop-api
+sudo systemctl stop nginx
+~~~
+
+#### Stop EC2 bằng CLI
+
+~~~bash
+aws ec2 stop-instances --instance-ids i-xxxxxxxxxxxxxxxxx --region ap-southeast-1
+~~~
+
+#### RDS
+
+Trước khi xóa RDS, tạo snapshot:
+
+~~~bash
+aws rds create-db-snapshot \
+  --db-instance-identifier netflop-db \
+  --db-snapshot-identifier netflop-db-before-cleanup
+~~~
+
+
+<!-- NETFLOP_IMPLEMENTATION_END -->

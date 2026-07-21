@@ -131,3 +131,71 @@ movies/{movieId}/episodes/{episodeId}/hls/index.m3u8
 movies/{movieId}/episodes/{episodeId}/hls/*.ts
 ~~~
 <!-- NETFLOP_DETAIL_END -->
+
+<!-- NETFLOP_IMPLEMENTATION_START -->
+#### MediaConvert job steps
+
+1. Backend receives <code>inputS3Uri</code> after video upload completes.
+2. Backend creates <code>outputPrefix</code> from movieId and episodeId.
+3. Backend calls AWS SDK <code>CreateJobCommand</code>.
+4. Backend passes the MediaConvert role ARN.
+5. The job uses Apple HLS output group.
+6. The job creates 360p, 480p, 720p, and 1080p renditions.
+7. Backend stores jobId and CloudFront playback URL in the episode record.
+
+#### MediaConvert service code sample
+
+~~~js
+const outputPrefix = 'movies/' + movieId + '/episodes/' + episodeId + '/hls/';
+const masterKey = outputPrefix + 'index.m3u8';
+
+const command = new CreateJobCommand({
+  Role: awsConfig.mediaConvertRoleArn,
+  UserMetadata: {
+    movieId: String(movieId),
+    episodeId: String(episodeId),
+    outputPrefix,
+    masterKey
+  },
+  Settings: {
+    Inputs: [{ FileInput: inputS3Uri }],
+    OutputGroups: [{
+      Name: 'Apple HLS',
+      OutputGroupSettings: {
+        Type: 'HLS_GROUP_SETTINGS',
+        HlsGroupSettings: {
+          Destination: 's3://' + awsConfig.s3OutputBucket + '/' + outputPrefix + 'index',
+          SegmentLength: 6,
+          OutputSelection: 'MANIFESTS_AND_SEGMENTS'
+        }
+      },
+      Outputs: [
+        createHlsOutput({ nameModifier: '_360p', width: 640, height: 360 }),
+        createHlsOutput({ nameModifier: '_480p', width: 854, height: 480 }),
+        createHlsOutput({ nameModifier: '_720p', width: 1280, height: 720 }),
+        createHlsOutput({ nameModifier: '_1080p', width: 1920, height: 1080 })
+      ]
+    }]
+  }
+});
+~~~
+
+#### Update database after job submission
+
+~~~js
+const job = await mediaConvertService.createHlsJob({
+  inputS3Uri: uploaded.s3Uri,
+  movieId,
+  episodeId: pendingEpisode.MaTap
+});
+
+await episodeModel.updateUploadProcessing(pendingEpisode.MaTap, {
+  jobId: job.jobId,
+  hlsUrl: playbackUrls.hlsUrl,
+  cloudFrontUrl: playbackUrls.cloudFrontUrl,
+  outputKey: job.masterKey
+});
+~~~
+
+
+<!-- NETFLOP_IMPLEMENTATION_END -->

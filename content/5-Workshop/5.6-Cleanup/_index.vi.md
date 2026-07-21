@@ -7,10 +7,9 @@ pre: " <b> 5.6. </b> "
 ---
 
 Phần cleanup dùng để kiểm tra và dọn các tài nguyên không còn sử dụng sau khi hoàn thành workshop hoặc demo. Với website xem phim, cần đặc biệt chú ý S3 và MediaConvert vì video dung lượng lớn có thể tạo chi phí lưu trữ và xử lý đáng kể.
+![budget](/2280600178_huynhduybao_workshopaws/images/5-Workshop/5.6-Cleanup/5.6.3-cost-check/budget.png)
+![budget](/2280600178_huynhduybao_workshopaws/images/5-Workshop/5.6-Cleanup/5.6.3-cost-check/cost.png)
 
-{{% notice info %}}
-Cần thêm ảnh: danh sách tài nguyên AWS cần giữ/xóa, S3 storage usage, CloudFront distribution, RDS snapshot và Billing Dashboard sau khi cleanup.
-{{% /notice %}}
 
 #### Nội dung
 
@@ -28,3 +27,29 @@ Không xóa tài nguyên production khi website còn chạy. Cleanup trong báo 
 
 Với Netflop, tài nguyên cần cẩn thận nhất là RDS và S3 output vì chúng chứa dữ liệu chính và media đang được website sử dụng.
 <!-- NETFLOP_DETAIL_END -->
+
+<!-- NETFLOP_IMPLEMENTATION_START -->
+#### Mục tiêu cleanup
+
+Cleanup dùng để giảm chi phí sau khi demo hoặc khi không còn sử dụng môi trường. Không nên xóa tài nguyên khi chưa backup dữ liệu quan trọng.
+
+#### Nguyên tắc dọn dẹp
+
+1. Backup database trước khi xóa RDS.
+2. Export hoặc giữ lại video quan trọng trước khi xóa S3.
+3. Tắt EC2 nếu chỉ nghỉ tạm thời, terminate nếu không dùng nữa.
+4. Xóa CloudFront sau cùng vì cần disable trước khi delete.
+5. Kiểm tra Cost Explorer sau khi cleanup.
+
+#### Thứ tự đề xuất
+
+~~~text
+Backup RDS
+-> Stop PM2/Nginx nếu cần
+-> Empty S3 test prefixes
+-> Disable CloudFront test distribution
+-> Delete Lambda/EventBridge test rules
+-> Stop/terminate EC2
+-> Delete RDS snapshot hoặc DB nếu không dùng
+~~~
+<!-- NETFLOP_IMPLEMENTATION_END -->

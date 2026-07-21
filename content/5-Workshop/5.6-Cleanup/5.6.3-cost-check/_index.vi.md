@@ -89,3 +89,45 @@ Nên ghi chi phí theo nhóm thay vì chỉ ghi tổng tiền. Ví dụ:
 
 Nếu upload nhiều phim 5GB, chi phí tăng chủ yếu ở S3, MediaConvert và CloudFront data transfer.
 <!-- NETFLOP_DETAIL_END -->
+
+<!-- NETFLOP_IMPLEMENTATION_START -->
+#### Kiểm tra chi phí sau workshop
+
+Các dịch vụ có thể phát sinh chi phí chính:
+
+* EC2 chạy liên tục.
+* RDS chạy liên tục và storage backup.
+* S3 lưu video gốc/HLS output.
+* MediaConvert tính phí theo thời lượng video convert.
+* CloudFront tính phí data transfer.
+* CloudWatch tính phí log/metric/alarm.
+
+#### Lệnh xem chi phí theo service
+
+~~~bash
+aws ce get-cost-and-usage \
+  --time-period Start=2026-07-01,End=2026-07-31 \
+  --granularity MONTHLY \
+  --metrics UnblendedCost \
+  --group-by Type=DIMENSION,Key=SERVICE
+~~~
+
+#### Cách ước tính khi upload phim lớn
+
+Khi upload 5 phim, mỗi phim 5GB, chi phí tăng ở 3 phần:
+
+1. S3 input: lưu khoảng 25GB video gốc.
+2. S3 output: HLS nhiều bitrate có thể gần bằng hoặc lớn hơn dung lượng gốc tùy cấu hình.
+3. MediaConvert: tính theo thời lượng nội dung và độ phân giải output.
+4. CloudFront: tính theo lượng người xem tải segment.
+
+#### Bảng trình bày trong báo cáo
+
+| Nhóm chi phí | Nguyên nhân | Cách tối ưu |
+| --- | --- | --- |
+| S3 | Lưu video gốc và HLS | Xóa file test, lifecycle |
+| MediaConvert | Convert nhiều chất lượng | Chỉ xuất quality cần thiết |
+| CloudFront | Người dùng xem video | Cache đúng, dùng CDN thay vì EC2 |
+| RDS | DB chạy 24/7 | Chọn instance nhỏ giai đoạn demo |
+| EC2 | Server chạy 24/7 | Stop khi không dùng demo |
+<!-- NETFLOP_IMPLEMENTATION_END -->

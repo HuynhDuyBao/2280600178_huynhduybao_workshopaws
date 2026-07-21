@@ -85,3 +85,51 @@ async function saveProgress({ userId, episodeId, currentTime, duration }) {
 4. Confirm playback resumes near the previous position.
 5. Sign in as user B and confirm user A's progress does not appear.
 <!-- NETFLOP_DETAIL_END -->
+
+<!-- NETFLOP_IMPLEMENTATION_START -->
+#### User testing
+
+The user flow must prove that the website stores state per account, not in shared local storage only:
+
+1. Register or sign in.
+2. Open a movie with multiple episodes.
+3. Watch for a few minutes and leave the page.
+4. Open Profile -> Continue Watching or Watch History.
+5. Sign in with another account and verify that the data is not shared.
+
+#### Frontend progress save sample
+
+~~~js
+const watchedSeconds = Math.max(0, Math.floor(Number(progress?.currentTime || 0)));
+
+movieApi.saveHistory(movie.id, {
+  episodeId: selectedEpisode?.id || null,
+  watchedSeconds
+}).catch(() => {});
+~~~
+
+#### Backend per-user history sample
+
+~~~js
+await pool.execute(
+  'INSERT INTO lichsu (UserID, TenDN, MaPhim, MaTap, ThoiGianXem, ThoiGian) VALUES (:userId, :username, :movieId, :episodeId, :watchedSeconds, NOW()) ON DUPLICATE KEY UPDATE MaTap = VALUES(MaTap), ThoiGianXem = VALUES(ThoiGianXem), ThoiGian = VALUES(ThoiGian)',
+  {
+    userId: user.id,
+    username: user.ten_dang_nhap,
+    movieId,
+    episodeId,
+    watchedSeconds
+  }
+);
+~~~
+
+#### Expected result
+
+* If account A watches a movie, only account A sees that history.
+* Account B does not see account A's continue-watching item.
+* When the user clicks Continue Watching, the player seeks to the saved position.
+
+{{% notice info %}}
+Screenshots needed: account center, watch history, continue watching, history table in database, and player resume position.
+{{% /notice %}}
+<!-- NETFLOP_IMPLEMENTATION_END -->

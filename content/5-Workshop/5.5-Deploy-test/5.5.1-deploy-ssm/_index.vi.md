@@ -89,3 +89,47 @@ pm2 restart netflop-api --update-env
 pm2 logs netflop-api
 ~~~
 <!-- NETFLOP_DETAIL_END -->
+
+<!-- NETFLOP_IMPLEMENTATION_START -->
+#### Deploy ứng dụng lên EC2
+
+Có thể deploy bằng SSH hoặc AWS Systems Manager Session Manager. Trong báo cáo nên trình bày theo các bước rõ ràng:
+
+1. Pull source mới nhất từ Git.
+2. Cài dependency backend/frontend.
+3. Build frontend.
+4. Copy build ra thư mục Nginx.
+5. Restart backend bằng PM2.
+6. Reload Nginx.
+7. Kiểm tra API và giao diện.
+
+#### Lệnh triển khai mẫu
+
+~~~bash
+cd /home/ubuntu/netflop
+git pull origin feature/uploadaws
+
+cd backend
+npm install --omit=dev
+pm2 restart netflop-api --update-env
+
+cd ../frontend
+npm install
+npm run build
+sudo rsync -a --delete dist/ /var/www/netflop/
+sudo nginx -t
+sudo systemctl reload nginx
+~~~
+
+#### Kiểm tra sau deploy
+
+~~~bash
+pm2 status
+pm2 logs netflop-api --lines 50
+sudo systemctl status nginx --no-pager
+curl -I https://netflop.win
+curl https://netflop.win/api/health
+~~~
+
+
+<!-- NETFLOP_IMPLEMENTATION_END -->

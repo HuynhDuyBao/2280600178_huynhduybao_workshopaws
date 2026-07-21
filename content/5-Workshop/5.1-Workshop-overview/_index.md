@@ -18,3 +18,39 @@ Image needed: overall Netflop AWS architecture diagram.
 
 1. [Overall architecture](5.1.1-architecture/)
 2. [Service map](5.1.2-service-map/)
+
+<!-- NETFLOP_IMPLEMENTATION_START -->
+#### Workshop scenario
+
+The workshop is based on a real movie streaming website with two user groups:
+
+* Normal users can register, sign in, watch movies, choose episodes, enable subtitles, resume watching, add favorites, and rate movies.
+* Administrators can add movies, add episodes, upload large video files to S3, track MediaConvert progress, and manage episode subtitles and banners.
+
+#### Demo flow
+
+1. Open <code>https://netflop.win</code>.
+2. Check the movie list, movie detail page, and watch page.
+3. Sign in as an administrator.
+4. Upload an MP4/MKV episode from the admin page.
+5. Verify that the source file appears in the S3 input bucket.
+6. Verify that MediaConvert creates HLS output in the S3 output bucket.
+7. Play the episode from the user website through CloudFront.
+8. Upload SRT/VTT subtitles and test the subtitle selector.
+9. Verify watch history is stored per account.
+
+#### Related project folders
+
+| Component | Source path |
+| --- | --- |
+| Backend API | <code>backend/src</code> |
+| React frontend | <code>frontend/src</code> |
+| Admin upload UI | <code>frontend/src/admin</code> |
+| MediaConvert notifier Lambda | <code>aws/lambda/mediaconvert-notifier</code> |
+| Subtitle converter Lambda | <code>aws/lambda/subtitle-converter</code> |
+| Database dump | <code>database/web_xem_phim_final_dump.sql</code> |
+
+{{% notice info %}}
+Screenshots needed: homepage, movie detail page, watch page, admin page, and user/admin permission flow.
+{{% /notice %}}
+<!-- NETFLOP_IMPLEMENTATION_END -->
