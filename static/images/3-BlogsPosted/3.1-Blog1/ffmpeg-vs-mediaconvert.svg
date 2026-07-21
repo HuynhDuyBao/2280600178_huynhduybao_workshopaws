@@ -1,0 +1,129 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="650" viewBox="0 0 1200 650" role="img" aria-labelledby="title desc">
+  <title id="title">FFmpeg on EC2 compared with AWS Elemental MediaConvert</title>
+  <desc id="desc">Comparison diagram showing the previous approach where uploaded videos were processed by FFmpeg on EC2, causing high CPU and manual scaling, and the improved approach where S3, MediaConvert, EventBridge, Lambda, and CloudFront form an automated scalable video pipeline.</desc>
+  <defs>
+    <marker id="arrowBlue" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M1 1 L11 6 L1 11" fill="none" stroke="#1679bf" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+    <marker id="arrowGreen" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M1 1 L11 6 L1 11" fill="none" stroke="#2f8a39" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+    <style>
+      .title{font-family:Arial,Helvetica,sans-serif;font-size:30px;font-weight:700;fill:#111;text-anchor:middle}
+      .section{font-family:Arial,Helvetica,sans-serif;font-size:25px;font-weight:700;fill:#111;text-anchor:middle}
+      .label{font-family:Arial,Helvetica,sans-serif;font-size:19px;font-weight:700;fill:#111;text-anchor:middle}
+      .small{font-family:Arial,Helvetica,sans-serif;font-size:15px;fill:#333;text-anchor:middle}
+      .box{fill:#fff;stroke:#d8dde6;stroke-width:2}
+      .before{fill:#fff7f3;stroke:#ef6b3a;stroke-width:3}
+      .after{fill:#f3fbf5;stroke:#31a24c;stroke-width:3}
+      .blue{fill:none;stroke:#1679bf;stroke-width:4;marker-end:url(#arrowBlue)}
+      .green{fill:none;stroke:#2f8a39;stroke-width:4;marker-end:url(#arrowGreen)}
+      .orange{fill:#ff9900}
+      .greenfill{fill:#3f8624}
+      .purple{fill:#7b42e9}
+      .pink{fill:#d92872}
+      .icon{fill:none;stroke:#fff;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+      .darkicon{fill:none;stroke:#333;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+    </style>
+  </defs>
+  <rect width="1200" height="650" fill="#fafafa"/>
+  <text class="title" x="600" y="48">Choosing MediaConvert Instead of FFmpeg on EC2</text>
+  <rect class="before" x="48" y="88" width="1104" height="205" rx="12"/>
+  <rect class="after" x="48" y="340" width="1104" height="250" rx="12"/>
+  <text class="section" x="170" y="128">Before: FFmpeg on EC2</text>
+  <text class="section" x="177" y="380">After: Managed AWS Pipeline</text>
+  <g transform="translate(90 165)">
+    <rect class="box" width="120" height="78" rx="8"/>
+    <path class="darkicon" d="M30 18v42l38-21z"/>
+    <path class="darkicon" d="M18 10v58M102 10v58"/>
+    <text class="label" x="60" y="110">Admin Upload</text>
+  </g>
+  <g transform="translate(265 158)">
+    <rect class="greenfill" width="90" height="90" rx="4"/>
+    <path class="icon" d="M18 27c0-12 54-12 54 0v40c0 12-54 12-54 0z"/>
+    <path class="icon" d="M18 27c0 12 54 12 54 0"/>
+    <text class="label" x="45" y="118">S3 Upload</text>
+  </g>
+  <g transform="translate(440 146)">
+    <rect class="orange" width="115" height="115" rx="4"/>
+    <path class="icon" d="M34 82l26-59h17L51 82z"/>
+    <path class="icon" d="M38 20h28l31 63"/>
+    <text class="label" x="58" y="143">EC2 + FFmpeg</text>
+    <text class="small" x="58" y="164">High CPU</text>
+  </g>
+  <g transform="translate(655 158)">
+    <rect class="box" width="150" height="90" rx="8"/>
+    <path class="darkicon" d="M38 22h56l18 18v28H38z"/>
+    <path class="darkicon" d="M94 22v18h18"/>
+    <text class="label" x="75" y="120">HLS Output</text>
+  </g>
+  <g transform="translate(910 142)">
+    <rect class="box" width="170" height="120" rx="8"/>
+    <path d="M44 35h82v18H44z" fill="#ef6b3a"/>
+    <path d="M44 63h82v18H44z" fill="#ef6b3a"/>
+    <path d="M44 91h58v18H44z" fill="#ef6b3a"/>
+    <text class="label" x="85" y="150">Manual Ops</text>
+    <text class="small" x="85" y="171">Queue, retry, scale</text>
+  </g>
+  <path class="blue" d="M210 204h50"/>
+  <path class="blue" d="M355 204h80"/>
+  <path class="blue" d="M555 204h95"/>
+  <path class="blue" d="M805 204h100"/>
+  <g transform="translate(90 435)">
+    <rect class="box" width="120" height="78" rx="8"/>
+    <path class="darkicon" d="M30 18v42l38-21z"/>
+    <path class="darkicon" d="M18 10v58M102 10v58"/>
+    <text class="label" x="60" y="110">Admin Upload</text>
+  </g>
+  <g transform="translate(258 425)">
+    <rect class="greenfill" width="90" height="90" rx="4"/>
+    <path class="icon" d="M18 27c0-12 54-12 54 0v40c0 12-54 12-54 0z"/>
+    <path class="icon" d="M18 27c0 12 54 12 54 0"/>
+    <text class="label" x="45" y="118">S3 Input</text>
+  </g>
+  <g transform="translate(410 418)">
+    <rect class="orange" width="105" height="105" rx="4"/>
+    <path class="icon" d="M31 37l21-12 21 12v30L52 79 31 67z"/>
+    <path class="icon" d="M52 25v22l21 12M52 47L31 59"/>
+    <text class="label" x="53" y="133">MediaConvert</text>
+    <text class="small" x="53" y="153">Managed encode</text>
+  </g>
+  <g transform="translate(580 425)">
+    <rect class="greenfill" width="90" height="90" rx="4"/>
+    <path class="icon" d="M18 27c0-12 54-12 54 0v40c0 12-54 12-54 0z"/>
+    <path class="icon" d="M18 27c0 12 54 12 54 0"/>
+    <text class="label" x="45" y="118">S3 HLS</text>
+  </g>
+  <g transform="translate(722 425)">
+    <rect class="purple" width="90" height="90" rx="4"/>
+    <circle class="icon" cx="45" cy="45" r="30"/>
+    <path class="icon" d="M21 54l17-25 21 6 12 22"/>
+    <text class="label" x="45" y="118">CloudFront</text>
+  </g>
+  <g transform="translate(883 402)">
+    <rect class="pink" width="78" height="78" rx="4"/>
+    <circle class="icon" cx="39" cy="25" r="6"/>
+    <circle class="icon" cx="55" cy="54" r="6"/>
+    <circle class="icon" cx="22" cy="55" r="6"/>
+    <path class="icon" d="M39 31l14 18M36 31L24 50"/>
+    <text class="label" x="39" y="106">EventBridge</text>
+  </g>
+  <g transform="translate(990 402)">
+    <rect class="orange" width="78" height="78" rx="4"/>
+    <path class="icon" d="M24 60l18-42h13L37 60z"/>
+    <path class="icon" d="M27 17h22l23 43"/>
+    <text class="label" x="39" y="106">Lambda</text>
+    <text class="small" x="39" y="126">Update Ready</text>
+  </g>
+  <path class="green" d="M210 474h44"/>
+  <path class="green" d="M348 474h58"/>
+  <path class="green" d="M515 474h61"/>
+  <path class="green" d="M670 474h48"/>
+  <path class="green" d="M515 452c125-90 272-95 364-43"/>
+  <path class="green" d="M961 441h25"/>
+  <g transform="translate(1010 515)">
+    <rect class="box" width="105" height="42" rx="6"/>
+    <text class="small" x="52" y="26">Status: Ready</text>
+  </g>
+  <text class="small" x="600" y="616">Result: less EC2 load, automatic HLS generation, event-driven status updates, and easier scaling.</text>
+</svg>

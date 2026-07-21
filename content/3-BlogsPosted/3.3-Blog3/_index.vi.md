@@ -5,6 +5,8 @@ weight: 1
 chapter: false
 pre: " <b> 3.3. </b> "
 ---
+![AWS media workflow with S3, MediaConvert, CloudFront, Lambda, EventBridge, CloudWatch va SNS](/images/3-BlogsPosted/3.3-Blog3/mediaconvert-workflow.svg)
+
 📝 Bài 3: Chia sẻ một trải nghiệm khi xây dựng Media Pipeline trên AWS
 
 Xin chào mọi người,

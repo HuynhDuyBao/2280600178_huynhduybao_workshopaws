@@ -5,6 +5,8 @@ weight: 1
 chapter: false
 pre: " <b> 3.2. </b> "
 ---
+![S3, MediaConvert, CloudFront va website streaming flow](/images/3-BlogsPosted/3.2-Blog2/s3-cloudfront-streaming.svg)
+
 📝 Bài 2: Chia sẻ một kinh nghiệm nhỏ khi xây dựng website xem phim trên AWS
 
 Xin chào mọi người,
@@ -38,3 +40,5 @@ Một số lợi ích mà nhóm nhận thấy:
 [https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/Introduction.html](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/Introduction.html)
 [https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/PrivateContent.html](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/PrivateContent.html?utm_source=chatgpt.com)
 [https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/private-content-signed-cookies.html](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/private-content-signed-cookies.html?utm_source=chatgpt.com)
+
+
