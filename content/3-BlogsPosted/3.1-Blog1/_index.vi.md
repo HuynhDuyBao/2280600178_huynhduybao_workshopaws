@@ -5,7 +5,7 @@ weight: 1
 chapter: false
 pre: " <b> 3.1. </b> "
 ---
-![So sanh FFmpeg tren EC2 voi AWS Elemental MediaConvert](/2280600178_huynhduybao_workshopaws/images/3-BlogsPosted/3.1-Blog1/ffmpeg-vs-mediaconvert.svg)
+![So sanh FFmpeg tren EC2 voi AWS Elemental MediaConvert](/2280600178_huynhduybao_workshopaws/images/3-BlogsPosted/3.1-Blog1/ffmpeg-vs-mediaconvert.png)
 
 Bài 1: Tại sao nhóm mình chọn AWS Elemental MediaConvert thay vì FFmpeg?
 

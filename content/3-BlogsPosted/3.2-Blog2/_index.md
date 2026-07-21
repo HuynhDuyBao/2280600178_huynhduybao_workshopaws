@@ -9,7 +9,7 @@ pre: " <b> 3.2. </b> "
 ⚠️ **Note:** The information below is for reference purposes only. Please **do not copy verbatim** for your report, including this warning.
 {{% /notice %}}
 
-![S3, MediaConvert, CloudFront, and website streaming flow](/2280600178_huynhduybao_workshopaws/images/3-BlogsPosted/3.2-Blog2/s3-cloudfront-streaming.svg)
+![S3, MediaConvert, CloudFront, and website streaming flow](/2280600178_huynhduybao_workshopaws/images/3-BlogsPosted/3.2-Blog2/s3-cloudfront-streaming.png)
 
 # A Small Experience from Building a Movie Streaming Website on AWS
 
